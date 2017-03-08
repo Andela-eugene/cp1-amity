@@ -18,7 +18,7 @@ class Person(object):
 
 		self._username = kwargs.get('username')
 		self._role = kwargs.get('role')
-		self._person_id = kwargs.get('personid')
+		self._person_id = random.sample(range(100, 100000), 1)[0]
 		self._boarding = False
 		self._total_persons = 0
 		self._persons = {"Fellows": {}, "Staff": {}}

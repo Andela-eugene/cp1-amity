@@ -14,6 +14,7 @@ from accounts.fellow import Fellow
 from accounts.staff import Staff
 from rooms.room import Room
 from rooms.livingroom import Livingroom
+from rooms.office import Office
 
 class Amity(object):
     '''
@@ -22,20 +23,37 @@ class Amity(object):
 		the views of the project.  
 	'''
 
+    _rooms = {"offices": {}, "livingspace": {}}
+    _persons = {"fellows": {}, "staff": {}}
+
     # ============================================================================
     # create room from amity
     # ============================================================================
     @staticmethod
     def create_room(name, roomtype):
-        pass
+        if roomtype.lower() == 'office':
+            new_office = Office(name)
+
+            office_dict = {name: {'name': new_office.get_roomname(), 'type': new_office.get_roomtype(), 'free-space': 4}}
+            _room['offices'].update(office_dict)
+        elif roomtype.lower() == 'accomodation':
+            new_living = Livingroom(name)
+
+            living_dict = {name: {'name': new_living.get_roomname(), 'type': new_living.get_roomtype(), 'free-space': 6}}
+            _room['offices'].update(living_dict)
+
 
     # ============================================================================
     # add new person to random room 
     # ============================================================================
     @staticmethod
-    def add_person(staff=None, fellow=None, accomodation=False):
+    def add_person(name, staff=None, fellow=None, accomodation=False):
 
-    	pass
+    	if staff is not None and fellow is None:
+            new_staff = Staff(name)
+
+            staff_dict = {name: {'name': new_staff.}}
+
 
     # ============================================================================
     # get person details

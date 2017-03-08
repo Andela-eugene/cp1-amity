@@ -28,7 +28,7 @@ class Fellow(Person):
 
 
 	@staticmethod
-	def add_person(self, accomodation=False):
+	def add_person(self, accomodation= 'N'):
 		'''
 			Fellow.add_person()
 			
@@ -37,7 +37,7 @@ class Fellow(Person):
             to the room. Additionally, it checks if the fellow opts for accomodation space.
 		'''
 
-
+		
 
 		pass
 
