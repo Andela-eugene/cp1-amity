@@ -13,7 +13,6 @@ Desc      : Fellow class that holds fellow specification, attributes and room al
 from person import Person
 from rooms.livingroom import Livingroom
 from rooms.office import Office
-from amity.amity import Amity
 
 class Fellow(Person):
 	

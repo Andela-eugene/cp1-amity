@@ -10,11 +10,10 @@ Desc      : Amity is a controller class that runs the application
 # necessary imports
 # ============================================================================
 
-from accounts.fellow import Fellow
-from accounts.staff import Staff
-from rooms.room import Room
 from rooms.livingroom import Livingroom
 from rooms.office import Office
+from person.fellow import Fellow
+from person.staff import Staff
 
 class Amity(object):
     '''
@@ -23,36 +22,60 @@ class Amity(object):
 		the views of the project.  
 	'''
 
-    _rooms = {"offices": {}, "livingspace": {}}
-    _persons = {"fellows": {}, "staff": {}}
+    def __init__(self):
+        self._rooms = {"offices": {}, "livingspace": {}}
+        self._rooms_object = {'offices': {}, 'livingspace': {}}
+        self._persons = {"fellows": {}, "staff": {}}
 
     # ============================================================================
     # create room from amity
     # ============================================================================
-    @staticmethod
-    def create_room(name, roomtype):
+    def create_room(self, name, roomtype):
         if roomtype.lower() == 'office':
             new_office = Office(name)
 
-            office_dict = {name: {'name': new_office.get_roomname(), 'type': new_office.get_roomtype(), 'free-space': 4}}
-            _room['offices'].update(office_dict)
+            #office_dict = {name: {'name': new_office.get_roomname(), 'type': new_office.get_roomtype(), 'free-space': 4}}
+            #self._rooms['offices'].update(office_dict)
+
+            office_object_dict = {name: new_office}
+            self._rooms_object['offices'].update(office_object_dict)
+
+            return 'room created'
         elif roomtype.lower() == 'accomodation':
             new_living = Livingroom(name)
 
             living_dict = {name: {'name': new_living.get_roomname(), 'type': new_living.get_roomtype(), 'free-space': 6}}
-            _room['offices'].update(living_dict)
+            self._rooms['offices'].update(living_dict)
+
+            return 'room created'
 
 
     # ============================================================================
     # add new person to random room 
     # ============================================================================
-    @staticmethod
-    def add_person(name, staff=None, fellow=None, accomodation=False):
+    def add_person(self, name, staff=None, fellow=None, accomodation=False):
 
     	if staff is not None and fellow is None:
             new_staff = Staff(name)
 
-            staff_dict = {name: {'name': new_staff.}}
+            staff_dict = {name: {'name': new_staff.get_username(), 'user_id': new_staff.get_person_id(), 'role': new_staff.get_role(), 'boarding': new_staff.get_boarding()}}
+            self._persons['staff'].update(staff_dict)
+
+        elif staff is None and fellow is not None:
+
+            if accomodation is True:
+
+                new_fellow = Staff(name)
+                new_fellow.set_boarding(True)
+
+                fellow_dict = {name: {'name': new_fellow.get_username(), 'user_id': new_fellow.get_person_id(), 'role': new_fellow.get_role(), 'boarding': new_fellow.get_boarding()}}
+                self._persons['fellows'].update(fellow_dict)
+
+                for k, v in self._room['livingspace'].iteritems():
+                    if k == 'free-space' and v > 0:
+                        pass
+
+
 
 
     # ============================================================================
@@ -113,3 +136,22 @@ class Amity(object):
     # ============================================================================
     def load_state(self, load_data):
         pass
+
+# ============================================================================
+# test amity connection and operations
+# ============================================================================
+def test():
+
+    amity_one = Amity()
+
+    print(amity_one.create_room('reception', 'OFFICE'))
+    print(amity_one.create_room('occulus', 'OFFICE'))
+    print amity_one._rooms_object['offices']
+
+    for k, v in amity_one._rooms_object['offices'].iteritems():
+        print k, v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+
+if __name__ == '__main__':
+    test()

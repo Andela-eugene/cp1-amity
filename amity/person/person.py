@@ -6,6 +6,8 @@ Desc      : Person superclass
 
 """
 
+import random
+
 class Person(object):
 	
 
@@ -22,6 +24,7 @@ class Person(object):
 		self._boarding = False
 		self._total_persons = 0
 		self._persons = {"Fellows": {}, "Staff": {}}
+		self._office_allocated = None
 
 
 	# ============================================================================
@@ -33,6 +36,12 @@ class Person(object):
 
 	def set_username(self, uname):
 		self._username = uname
+
+	def get_office_allocated(self):
+		return self._username
+
+	def set_office_allocated(self, offname):
+		self._office_allocated = offname
 
 	def get_role(self):
 		return self._role
