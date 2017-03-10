@@ -19,12 +19,17 @@ class Fellow(Person):
 	def __init__(self, name):
 
 		super(Fellow, self).__init__(username = name, role= 'FELLOW')
+		self._accomodation_allocated = None
 
 
 	# ============================================================================
 	# getter and setter methods for class attributes
 	# ============================================================================
+	def get_accomodation_allocated(self):
+		return self._username
 
+	def set_accomodation_allocated(self, accomname):
+		self._accomodation_allocated = accomname
 
 	@staticmethod
 	def add_person(self, accomodation= 'N'):

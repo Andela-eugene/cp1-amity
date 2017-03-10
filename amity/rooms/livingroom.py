@@ -17,9 +17,10 @@ class Livingroom(Room):
 	def __init__(self, name):
 
 		super(Livingroom, self).__init__(roomname = name, roomtype= 'LIVINGROOM', roomspace= 4)
-		self._space_available = 4
-		self.OFFICE_MAX_SPACE = 4
 
+	# ============================================================================
+	# add to room
+	# ============================================================================
 	def update_room_space(self):
 
 		'''
@@ -28,11 +29,18 @@ class Livingroom(Room):
 			updates the space available in the office instance. 
 		'''
 
-		if self._space_available - 1 > -1:
-			self._space_available = self._space_available - 1
-		else:
-			return 'out of space'
+		roomspace = get_room_space()
 
+		if roomspace > 0:
+			set_room_space(roomspace-1)
+			return True
+		else:
+			return False
+
+
+	# ============================================================================
+	# remove from room
+	# ============================================================================
 	def free_room_space(self):
 
 		'''
@@ -40,8 +48,10 @@ class Livingroom(Room):
 
 			frees up space in the office instance. 
 		'''
+		roomspace = get_room_space()
 
-		if self._space_available +  1 < 5:
-			self._space_available = self._space_available - 1
+		if 0 < roomspace < 4 :
+			set_room_space(roomspace+1)
+			return True
 		else:
-			return 'out of space'
+			return False
