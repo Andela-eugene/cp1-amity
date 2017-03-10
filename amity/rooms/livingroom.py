@@ -29,10 +29,10 @@ class Livingroom(Room):
 			updates the space available in the office instance. 
 		'''
 
-		roomspace = get_room_space()
+		roomspace = self.get_room_space()
 
 		if roomspace > 0:
-			set_room_space(roomspace-1)
+			self.set_room_space(roomspace-1)
 			return True
 		else:
 			return False
@@ -48,10 +48,10 @@ class Livingroom(Room):
 
 			frees up space in the office instance. 
 		'''
-		roomspace = get_room_space()
+		roomspace = self.get_room_space()
 
 		if 0 < roomspace < 4 :
-			set_room_space(roomspace+1)
+			self.set_room_space(roomspace+1)
 			return True
 		else:
 			return False

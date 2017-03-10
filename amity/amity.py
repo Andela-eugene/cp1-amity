@@ -95,6 +95,8 @@ class Amity(object):
                     is_office_allocated = True
                     break
 
+        return {'Office': is_office_allocated, 'Living': is_accom_allocatied}
+
     # ============================================================================
     # get person details
     # ============================================================================
@@ -190,6 +192,41 @@ def test():
         print k, v.get_roomname()
         print v.get_roomtype()
         print v.get_room_id()
+
+    print '============================================================================'
+    print '                                 Add Persons'
+    print '============================================================================'
+
+    amity_one.add_person('John', staff='STAFF', fellow=None, accomodation=False)
+    amity_one.add_person('Mark', staff='STAFF', fellow=None, accomodation=False)
+    amity_one.add_person('Ian', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Mat', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Mary', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Sally', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Daisy', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Stacy', staff=None, fellow='FELLOW', accomodation=False)
+
+    print '============================================================================'
+    print '                                 LIVINGSPACE ALLOCATED'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['livingspace'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    print '============================================================================'
+    print '                                 OFFICES ALLOCATED'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['offices'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+
 
 if __name__ == '__main__':
     test()
