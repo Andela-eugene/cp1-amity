@@ -6,8 +6,6 @@ Desc      : Room superclass
 
 """
 
-import random
-
 class Room(object):
 
 	def __init__(self, **kwargs):
@@ -19,7 +17,7 @@ class Room(object):
 
 		self._roomname = kwargs.get('roomname')
 		self._roomtype = kwargs.get('roomtype')
-		self._room_id = random.sample(range(100, 100000), 1)[0]
+		self._room_id = id(self)
 		self._room_space = kwargs.get('roomspace')
 
 

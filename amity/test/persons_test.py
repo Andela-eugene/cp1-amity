@@ -10,9 +10,9 @@ Desc      : Person test file
 # necessary imports
 # ============================================================================
 from unittest import TestCase
-from accounts.fellow import Fellow
-from accounts.person import Person
-from accounts.staff import Staff
+from person.fellow import Fellow
+from person.person import Person
+from person.staff import Staff
 
 class PersonTest(TestCase):
 

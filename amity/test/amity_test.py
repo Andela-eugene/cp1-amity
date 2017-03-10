@@ -11,11 +11,11 @@ Desc      : Amity test file
 # ============================================================================
 from unittest import TestCase
 
-from amity.amity import Amity
-from accounts.fellow import Fellow
-from accounts.staff import Staff
+from person.fellow import Fellow
+from person.staff import Staff
 from rooms.room import Room
 from rooms.livingroom import Livingroom
+from amity.amity import Amity
 
 
 class AmityTest(TestCase):
@@ -25,10 +25,10 @@ class AmityTest(TestCase):
 		self.new_staff = Staff('Kim')
 
 	def test_create_room_function(self):
-		assert self.amity.create_room('reception', 'OFFICE') == 'room created'
+		self.assertEqual(self.amity.create_room('reception', 'OFFICE'), 'room created')
 
 	def test_add_person_function(self):
-		self.assertTrue(self.amity.add_person(staff=self.new_staff))
+		self.assertTrue(self.amity.add_person('eugene', staff=self.new_staff))
 
 	def test_get_room_details(self):
 		new_livingspace = Livingroom('Java')
