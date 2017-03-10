@@ -60,7 +60,8 @@ class Amity(object):
     	if staff is not None and fellow is None:
             new_staff = Staff(name)
 
-            staff_dict = {name: {'name': new_staff.get_username(), 'user_id': new_staff.get_person_id(), 'role': new_staff.get_role(), 'boarding': new_staff.get_boarding()}}
+            # staff_dict = {name: {'name': new_staff.get_username(), 'user_id': new_staff.get_person_id(), 'role': new_staff.get_role(), 'boarding': new_staff.get_boarding()}}
+            staff_dict = {name: new_staff}
             self._persons['staff'].update(staff_dict)
 
             for k, v in self._rooms_object['offices'].iteritems():
@@ -78,7 +79,8 @@ class Amity(object):
 
                 new_fellow.set_boarding(True)
 
-                fellow_dict = {name: {'name': new_fellow.get_username(), 'user_id': new_fellow.get_person_id(), 'role': new_fellow.get_role(), 'boarding': new_fellow.get_boarding()}}
+                # fellow_dict = {name: {'name': new_fellow.get_username(), 'user_id': new_fellow.get_person_id(), 'role': new_fellow.get_role(), 'boarding': new_fellow.get_boarding()}}
+                fellow_dict = {name: new_fellow}
                 self._persons['fellows'].update(fellow_dict)
 
                 for k, v in self._rooms_object['livingspace'].iteritems():
@@ -100,10 +102,13 @@ class Amity(object):
     # ============================================================================
     # get person details
     # ============================================================================
-    @staticmethod
-    def get_person_details(user_id):
+    def get_person_details(self, user_id):
+        for k, v in self._persons.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_person_id() == user_id:
+                        return x
 
-    	pass
 
     # ============================================================================
     # print un allocated rooms
@@ -197,7 +202,7 @@ def test():
     print '                                 Add Persons'
     print '============================================================================'
 
-    amity_one.add_person('John', staff='STAFF', fellow=None, accomodation=False)
+    print amity_one.add_person('John', staff='STAFF', fellow=None, accomodation=False)
     amity_one.add_person('Mark', staff='STAFF', fellow=None, accomodation=False)
     amity_one.add_person('Ian', staff=None, fellow='FELLOW', accomodation=True)
     amity_one.add_person('Mat', staff=None, fellow='FELLOW', accomodation=True)
@@ -205,6 +210,16 @@ def test():
     amity_one.add_person('Sally', staff=None, fellow='FELLOW', accomodation=True)
     amity_one.add_person('Daisy', staff=None, fellow='FELLOW', accomodation=True)
     amity_one.add_person('Stacy', staff=None, fellow='FELLOW', accomodation=False)
+
+    print '============================================================================'
+    print '                                 PERSONS IDS'
+    print '============================================================================'
+
+    for k, v in amity_one._persons['fellows'].iteritems():
+        print v.get_person_id()
+
+    for k, v in amity_one._persons['staff'].iteritems():
+        print v.get_person_id()
 
     print '============================================================================'
     print '                                 LIVINGSPACE ALLOCATED'
@@ -226,6 +241,24 @@ def test():
         print v.get_room_id()
         print v.get_room_space()
 
+    print '============================================================================'
+    print '                                 GET USER ID'
+    print '============================================================================'
+
+    for k, v in amity_one._persons['staff'].iteritems():
+
+        print '============================================================================'
+        print '                                 searching for user with id {} '.format(v.get_person_id())
+        print '============================================================================'
+
+        pers = amity_one.get_person_details(v.get_person_id())
+
+        print '                                 {} '.format(pers.get_username())
+        print '                                 {} '.format(pers.get_role())
+        print '                                 room name {} '.format(pers.get_office_allocated().get_roomname())
+        print '                                 room id {} '.format(pers.get_office_allocated().get_room_id())
+
+        break
 
 
 if __name__ == '__main__':
