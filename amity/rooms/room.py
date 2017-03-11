@@ -17,9 +17,8 @@ class Room(object):
 
 		self._roomname = kwargs.get('roomname')
 		self._roomtype = kwargs.get('roomtype')
-		self._room_id = kwargs.get('roomid')
+		self._room_id = id(self)
 		self._room_space = kwargs.get('roomspace')
-		self._rooms = {"Fellows": {}, "Staff": {}}
 
 
 	# ============================================================================

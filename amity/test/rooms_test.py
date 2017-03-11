@@ -15,9 +15,9 @@ from unittest import TestCase
 from rooms.office import Office
 from rooms.room import Room
 from rooms.livingroom import Livingroom
-from accounts.fellow import Fellow
-from accounts.person import Person
-from accounts.staff import Staff
+from person.fellow import Fellow
+from person.person import Person
+from person.staff import Staff
 
 class RoomTest(TestCase):
 

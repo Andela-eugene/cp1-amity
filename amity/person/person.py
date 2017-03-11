@@ -18,10 +18,11 @@ class Person(object):
 
 		self._username = kwargs.get('username')
 		self._role = kwargs.get('role')
-		self._person_id = kwargs.get('personid')
+		self._person_id = id(self)
 		self._boarding = False
 		self._total_persons = 0
 		self._persons = {"Fellows": {}, "Staff": {}}
+		self._office_allocated = None
 
 
 	# ============================================================================
@@ -33,6 +34,12 @@ class Person(object):
 
 	def set_username(self, uname):
 		self._username = uname
+
+	def get_office_allocated(self):
+		return self._office_allocated
+
+	def set_office_allocated(self, offname):
+		self._office_allocated = offname
 
 	def get_role(self):
 		return self._role
