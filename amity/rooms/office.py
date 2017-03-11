@@ -52,7 +52,7 @@ class Office(Room):
 		'''
 		roomspace = self.get_room_space()
 
-		if 0 < roomspace < 6 :
+		if 0 <= roomspace < 6 :
 			self.set_room_space(roomspace+1)
 			return True
 		else:

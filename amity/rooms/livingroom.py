@@ -50,7 +50,7 @@ class Livingroom(Room):
 		'''
 		roomspace = self.get_room_space()
 
-		if 0 < roomspace < 4 :
+		if 0 <= roomspace < 4 :
 			self.set_room_space(roomspace+1)
 			return True
 		else:
