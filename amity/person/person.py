@@ -36,7 +36,7 @@ class Person(object):
 		self._username = uname
 
 	def get_office_allocated(self):
-		return self._username
+		return self._office_allocated
 
 	def set_office_allocated(self, offname):
 		self._office_allocated = offname

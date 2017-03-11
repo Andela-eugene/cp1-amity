@@ -9,6 +9,7 @@ Desc      : Amity is a controller class that runs the application
 # ============================================================================
 # necessary imports
 # ============================================================================
+import os
 
 from rooms.livingroom import Livingroom
 from rooms.office import Office
@@ -25,6 +26,7 @@ class Amity(object):
     def __init__(self):
         self._rooms_object = {'offices': {}, 'livingspace': {}}
         self._persons = {"fellows": {}, "staff": {}}
+        self._unallocated_persons = {"fellows": {}, "staff_fellow": {}}
 
     # ============================================================================
     # create room from amity
@@ -60,7 +62,8 @@ class Amity(object):
     	if staff is not None and fellow is None:
             new_staff = Staff(name)
 
-            staff_dict = {name: {'name': new_staff.get_username(), 'user_id': new_staff.get_person_id(), 'role': new_staff.get_role(), 'boarding': new_staff.get_boarding()}}
+            # staff_dict = {name: {'name': new_staff.get_username(), 'user_id': new_staff.get_person_id(), 'role': new_staff.get_role(), 'boarding': new_staff.get_boarding()}}
+            staff_dict = {name: new_staff}
             self._persons['staff'].update(staff_dict)
 
             for k, v in self._rooms_object['offices'].iteritems():
@@ -69,17 +72,19 @@ class Amity(object):
                     v.update_room_space()
                     is_office_allocated = True
                     break
+            if is_office_allocated == False:
+                self._unallocated_persons['staff_fellow'].update(staff_dict)
 
         elif staff is None and fellow is not None:
 
             new_fellow = Fellow(name)
+            fellow_dict = {name: new_fellow}
+
+            self._persons['fellows'].update(fellow_dict)
 
             if accomodation is True:
 
                 new_fellow.set_boarding(True)
-
-                fellow_dict = {name: {'name': new_fellow.get_username(), 'user_id': new_fellow.get_person_id(), 'role': new_fellow.get_role(), 'boarding': new_fellow.get_boarding()}}
-                self._persons['fellows'].update(fellow_dict)
 
                 for k, v in self._rooms_object['livingspace'].iteritems():
                     if v.get_room_space() > 0:
@@ -95,19 +100,56 @@ class Amity(object):
                     is_office_allocated = True
                     break
 
+            if is_office_allocated == False:
+                self._unallocated_persons['staff_fellow'].update(fellow_dict)
+
+            if is_accom_allocatied == False:
+                self._unallocated_persons['staff_fellow'].update(fellow_dict)
+
+        return {'Office': is_office_allocated, 'Living': is_accom_allocatied}
+
     # ============================================================================
     # get person details
     # ============================================================================
-    @staticmethod
-    def get_person_details(user_id):
+    def get_person_details(self, user_id):
+        for k, v in self._persons.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_person_id() == user_id:
+                        return x
 
-    	pass
+    # ============================================================================
+    # get person details
+    # ============================================================================
+    def get_room_details(self, room_name):
+        for k, v in self._rooms_object.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_roomname() == room_name:
+                        return x
+        
+
+    # ============================================================================
+    # add people from a txt file
+    # ============================================================================
+    def load_people(self, file = None):
+        file_loc = '/amity/data/{}.txt'.format(file)
+        path = os.getcwd() + file_loc
+        persons_file = open(path, 'r')
+
+        for person_entry in persons_file:
+            data = person_entry.split()
+            person_name = data[0]
+            person_role = data[1]
+            if person_role.lower() == 'staff':
+                ret = self.add_person(person_name, staff = person_role)
+            elif person_role.lower() == 'fellow':
+                ret = self.add_person(person_name, fellow = person_role)
 
     # ============================================================================
     # print un allocated rooms
     # ============================================================================
-    @staticmethod
-    def print_unallocated(file = None):
+    def print_unallocated(self, file = None):
 
     	pass
 
@@ -122,8 +164,7 @@ class Amity(object):
     # ============================================================================
     # print room details
     # ============================================================================
-    @staticmethod
-    def print_room(roomname):
+    def print_room(self, roomname):
 
     	pass
 
@@ -134,13 +175,53 @@ class Amity(object):
         pass
 
     # ============================================================================
-    # reallocate person
+    # reallocate person to new room
     # ============================================================================
+    def reallocate_person(self, person_id, roomname):
+        user = self.get_person_details(person_id)
+        prev_off_room = user.get_office_allocated().get_roomname()
+        prev_accom_room = None
+
+        if user.get_role() == 'FELLOW' and user.get_accomodation_allocated() != None:
+            prev_accom_room = user.get_accomodation_allocated().get_roomname()
+        room = self.get_room_details(roomname)
+        assigned = False
+
+        if room != None and user != None:
+            r_type = room.get_roomtype()
+
+            if r_type == 'OFFICE':
+                r_type = 'offices'
+            else:
+                r_type = 'livingspace'
+
+            for k, v in self._rooms_object[r_type].iteritems():
+                if k.lower() == roomname.lower() and v.get_room_space() > 0:
+
+                    for x, y in self._persons.iteritems():
+                        if isinstance(y ,dict):
+                            for a, b in y.iteritems():
+                                if b.get_person_id() == user.get_person_id() and r_type == 'offices':
+                                    v.update_room_space()
+                                    b.set_office_allocated(v)
+                                elif b.get_person_id() == user.get_person_id() and r_type == 'livingspace' and b.get_role() == 'FELLOW':
+                                    v.update_room_space()
+                                    b.set_accomodation_allocated(v)
+
+                if r_type == 'offices' and prev_off_room == v.get_roomname():
+                    v.free_room_space()
+                elif r_type == 'livingspace' and prev_accom_room == v.get_roomname():
+                    v.free_room_space()
+
+                    assigned = True
+                
+
+            return assigned
+
+        
     def reallocate_person_by_username(self, staffname, roomname):
         pass
 
-    def reallocate_person_by_userid(self, persinid, roomname):
-        pass
 
     # ============================================================================
     # reallocate person
@@ -190,6 +271,108 @@ def test():
         print k, v.get_roomname()
         print v.get_roomtype()
         print v.get_room_id()
+
+    print '============================================================================'
+    print '                                 Add Persons'
+    print '============================================================================'
+
+    print amity_one.add_person('John', staff='STAFF', fellow=None, accomodation=False)
+    amity_one.add_person('Mark', staff='STAFF', fellow=None, accomodation=False)
+    amity_one.add_person('Ian', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Mat', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Mary', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Sally', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Daisy', staff=None, fellow='FELLOW', accomodation=True)
+    amity_one.add_person('Stacy', staff=None, fellow='FELLOW', accomodation=False)
+
+    print '============================================================================'
+    print '                                 PERSONS IDS'
+    print '============================================================================'
+
+    for k, v in amity_one._persons['fellows'].iteritems():
+        print v.get_person_id()
+
+    for k, v in amity_one._persons['staff'].iteritems():
+        print v.get_person_id()
+
+    print '============================================================================'
+    print '                                 LIVINGSPACE ALLOCATED'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['livingspace'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    print '============================================================================'
+    print '                                 OFFICES ALLOCATED'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['offices'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    print '============================================================================'
+    print '                                 GET USER ID'
+    print '============================================================================'
+
+    for k, v in amity_one._persons['fellows'].iteritems():
+
+        print '============================================================================'
+        print '                                 searching for user with id {} '.format(v.get_person_id())
+        print '============================================================================'
+
+        pers = amity_one.get_person_details(v.get_person_id())
+
+        print '                                 {} '.format(pers.get_username())
+        print '                                 {} '.format(pers.get_role())
+        print '                                 room name {} '.format(pers.get_office_allocated().get_roomname())
+        print '                                 room id {} '.format(pers.get_office_allocated().get_room_id())
+
+        print '============================================================================'
+        print '                                 Reallocate person with id {} '.format(v.get_person_id())
+        print '============================================================================'
+
+        amity_one.reallocate_person(v.get_person_id(), 'reception')
+
+        print '                                 {} '.format(v.get_username())
+        print '                                 {} '.format(v.get_role())
+        print '                                 room name {} '.format(v.get_office_allocated().get_roomname())
+        print '                                 room id {} '.format(v.get_office_allocated().get_room_id())
+
+        break
+
+    print '============================================================================'
+    print '                                 NEW LIVINGSPACE ALLOCATIONS'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['livingspace'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    print '============================================================================'
+    print '                                 NEW OFFICES ALLOCATIONS'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['offices'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    print '============================================================================'
+    print '                                 SHOW PERSONS FROM FILE'
+    print '============================================================================'
+    amity_one.load_people(file = 'persons')
+    for k, v in amity_one._persons.iteritems():
+        if isinstance(v ,dict):
+            for n, x in v.iteritems():
+                print '                                 {}, {}'.format(x.get_username(), x.get_role())
 
 if __name__ == '__main__':
     test()
