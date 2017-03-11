@@ -26,7 +26,7 @@ class Fellow(Person):
 	# getter and setter methods for class attributes
 	# ============================================================================
 	def get_accomodation_allocated(self):
-		return self._username
+		return self._accomodation_allocated
 
 	def set_accomodation_allocated(self, accomname):
 		self._accomodation_allocated = accomname
