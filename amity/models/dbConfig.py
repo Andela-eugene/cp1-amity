@@ -22,9 +22,10 @@ class AmityDatabase:
 			filename is for connecting to database file
 		'''
 
-		self._db = sqlite3.connect('filename')
-		self._dbFilename = 'filename'
+		
 		self.filename = kwargs.get('filename')
+		self._dbFilename = self.filename
+		self._db = sqlite3.connect(self.filename)
 		self.table = kwargs.get('table', '')
 
 	def sql_do(self, sql, params = ()):

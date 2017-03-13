@@ -16,6 +16,8 @@ from rooms.office import Office
 from person.fellow import Fellow
 from person.staff import Staff
 
+from models.amityRoomDB import AmityRoomsDB
+
 class Amity(object):
     '''
 		Amity class is the controller class for the amity project
@@ -150,23 +152,45 @@ class Amity(object):
     # print un allocated rooms
     # ============================================================================
     def print_unallocated(self, file = None):
-
-    	pass
+        print '============================================================================'
+        print '                                 UN-ALLOCATED PERSONS'
+        print '============================================================================'
+        for k, v in self._persons.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_office_allocated() == None:
+                        print '                                 {}'.format(x.get_username())
 
     # ============================================================================
     # print allocated rooms and the persons allocated
     # ============================================================================
-    @staticmethod
-    def print_allocated(file = None):
+    def print_allocated(self, file = None):
+        print '============================================================================'
+        print '                                 ALLOCATED PERSONS WITH RESPECTIVE ROOMS'
+        print '============================================================================'
+        for k, v in self._persons.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_office_allocated() != None:
+                        print '                                 {}, {}'.format(x.get_username(), x.get_office_allocated().get_roomname())
 
-    	pass
+
 
     # ============================================================================
     # print room details
     # ============================================================================
     def print_room(self, roomname):
+        print '============================================================================'
+        print '                                 PRINT ROOM OCCUPANTS'
+        print '============================================================================'
+        for k, v in self._persons.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    if x.get_office_allocated() != None and x.get_office_allocated().get_roomname() == roomname:
+                        print '                                 {}, {}'.format(x.get_office_allocated().get_roomname(), x.get_username())
 
-    	pass
+
+
 
     # ============================================================================
     # create unique room name constaraint
@@ -224,16 +248,27 @@ class Amity(object):
 
 
     # ============================================================================
-    # reallocate person
+    # save data to database
     # ============================================================================
     def save_state(self, save_data):
-        pass
+        '''Save rooms first'''
+        roomDB = AmityRoomsDB(dbname = save_data, rooms = 'room')
+        print '                             SAVING ROOMS TO DB'
+        for k, v in self._rooms_object.iteritems():
+            if isinstance(v ,dict):
+                for k, x in v.iteritems():
+                    roomDB.insert_room(dict(room_id =x.get_room_id(), roomname= x.get_roomname(), roomtype= x.get_roomtype(), roomspace= x.get_room_space()))
+
+        print '                             SAVING ROOMS TO DB COMPLETED'
 
     # ============================================================================
     # loads a previously saved state
     # ============================================================================
     def load_state(self, load_data):
-        pass
+        roomDB = AmityRoomsDB(dbname = load_data, rooms = 'room')
+
+        for r in roomDB.retrive_rooms(): 
+            print '                                 {}'.format(r)
 
 # ============================================================================
 # test amity connection and operations
@@ -373,6 +408,26 @@ def test():
         if isinstance(v ,dict):
             for n, x in v.iteritems():
                 print '                                 {}, {}'.format(x.get_username(), x.get_role())
+
+    amity_one.print_allocated()
+
+    print '============================================================================'
+    print '                                 NEW OFFICES ALLOCATIONS'
+    print '============================================================================'
+
+    for k, v in amity_one._rooms_object['offices'].iteritems():
+        print v.get_roomname()
+        print v.get_roomtype()
+        print v.get_room_id()
+        print v.get_room_space()
+
+    amity_one.print_unallocated()
+
+    amity_one.print_room('occulus')
+
+    amity_one.save_state('amity.db')
+
+    amity_one.load_state('amity.db')
 
 if __name__ == '__main__':
     test()
