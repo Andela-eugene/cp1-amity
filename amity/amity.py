@@ -17,6 +17,7 @@ from person.fellow import Fellow
 from person.staff import Staff
 
 from models.amityRoomDB import AmityRoomsDB
+from models.amityPersonDB import AmityPersonDB
 
 class Amity(object):
     '''
@@ -253,6 +254,7 @@ class Amity(object):
     def save_state(self, save_data):
         '''Save rooms first'''
         roomDB = AmityRoomsDB(dbname = save_data, rooms = 'room')
+        personDB = AmityPersonDB(dbname = save_data, person = 'person')
         print '                             SAVING ROOMS TO DB'
         for k, v in self._rooms_object.iteritems():
             if isinstance(v ,dict):
@@ -261,13 +263,47 @@ class Amity(object):
 
         print '                             SAVING ROOMS TO DB COMPLETED'
 
+        '''Save persons to db'''
+        print '                             SAVING PERSONS TO DB'
+        for k, v in self._persons.iteritems():
+            if isinstance(v, dict):
+                for k, x in v.iteritems():
+
+                    off_obj = x.get_office_allocated()
+
+                    # check that room is asigned
+                    if off_obj == None:
+                        off_obj = None
+                    else:
+                        off_obj = off_obj.get_room_id()
+
+                    if x.get_role() == 'FELLOW':
+                        accom_obj = x.get_accomodation_allocated()
+                        # check that living space is assigned
+                        if accom_obj == None:
+                            accom_obj = None
+                        else:
+                            accom_obj = accom_obj.get_room_id()
+
+                        personDB.insert_person(dict(person_id = x.get_person_id(), username = x.get_username(), role = x.get_role(), boarding = x.get_boarding(), office_allocated= off_obj, accomodation_allocated = accom_obj))
+                    else:
+                        personDB.insert_person(dict(person_id = x.get_person_id(), username = x.get_username(), role = x.get_role(), boarding = x.get_boarding(), office_allocated= off_obj))
+
+        print '                             SAVING PERSON TO DB COMPLETED'
+
+
+
     # ============================================================================
     # loads a previously saved state
     # ============================================================================
     def load_state(self, load_data):
         roomDB = AmityRoomsDB(dbname = load_data, rooms = 'room')
+        personDB = AmityPersonDB(dbname = load_data, person = 'person')
 
         for r in roomDB.retrive_rooms(): 
+            print '                                 {}'.format(r)
+
+        for r in personDB.retrive_persons(): 
             print '                                 {}'.format(r)
 
 # ============================================================================
