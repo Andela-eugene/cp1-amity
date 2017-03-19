@@ -16,9 +16,9 @@ from rooms.office import Office
 
 class Fellow(Person):
 	
-	def __init__(self, name):
+	def __init__(self, fname=None, lname=None):
 
-		super(Fellow, self).__init__(username = name, role= 'FELLOW')
+		super(Fellow, self).__init__(fname= fname, lname= lname, role= 'FELLOW')
 		self._accomodation_allocated = None
 
 

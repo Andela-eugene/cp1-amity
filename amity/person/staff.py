@@ -14,9 +14,9 @@ from person import Person
 
 class Staff(Person):
 
-	def __init__(self, name):
+	def __init__(self, fname=None, lname=None):
 
-		super(Staff, self).__init__(username = name, role= 'STAFF')
+		super(Staff, self).__init__(fname= fname, lname= lname, role= 'STAFF')
 
 
 	@staticmethod
