@@ -14,21 +14,9 @@ from person import Person
 
 class Staff(Person):
 
-	def __init__(self, name):
+	def __init__(self, fname=None, lname=None):
 
-		super(Staff, self).__init__(username = name, role= 'STAFF')
-		self.number_of_staff = 0
-
-
-	# ============================================================================
-	# getter and setter methods for class attributes
-	# ============================================================================
-	def get_number_of_staff(self):
-		return self.number_of_staff
-
-	def set_number_of_staff(self, ttlStaff):
-		self.number_of_staff = ttlStaff
-
+		super(Staff, self).__init__(fname= fname, lname= lname, role= 'STAFF')
 
 
 	@staticmethod

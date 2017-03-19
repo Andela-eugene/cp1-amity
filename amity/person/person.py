@@ -6,6 +6,11 @@ Desc      : Person superclass
 
 """
 
+# ============================================================================
+# necessary imports
+# ============================================================================
+from abc import ABCMeta
+
 class Person(object):
 	
 
@@ -17,6 +22,8 @@ class Person(object):
 		'''
 
 		self._username = kwargs.get('username')
+		self._first_name = kwargs.get('fname')
+		self._last_name = kwargs.get('lname')
 		self._role = kwargs.get('role')
 		self._person_id = id(self)
 		self._boarding = False
@@ -34,6 +41,18 @@ class Person(object):
 
 	def set_username(self, uname):
 		self._username = uname
+
+	def get_first_name(self):
+		return self._first_name
+
+	def set_first_name(self, uname):
+		self._first_name = uname
+
+	def get_last_name(self):
+		return self._last_name
+
+	def set_last_name(self, uname):
+		self._last_name = uname
 
 	def get_office_allocated(self):
 		return self._office_allocated
