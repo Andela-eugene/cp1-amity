@@ -14,6 +14,11 @@ from room import Room
 
 
 class Office(Room):
+	'''
+		Office class inherits from Room super class .
+		The class inherits all attributes and methods from the parent class.
+		Initiates a Office room instance.
+	'''
 
 	def __init__(self, name):
 

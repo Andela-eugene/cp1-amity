@@ -13,6 +13,11 @@ Desc      : Livingroom class that holds livingroom specification and attributes
 from room import Room
 
 class Livingroom(Room):
+	'''
+		Livingroom class inherits from Room super class.
+		The class inherits all attributes and methods from the parent class.
+		Initiates a Livingroom room instance.
+	'''
 
 	def __init__(self, name):
 

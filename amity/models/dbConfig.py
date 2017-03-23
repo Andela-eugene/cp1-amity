@@ -41,67 +41,16 @@ class AmityDatabase:
 		self._db.execute(sql, params)
 		self._db.commit()
 
-
-	# ============================================================================
-	# query the database
-	# ============================================================================
-	def sql_query(self, sql, params = ()):
-		'''
-			db.sql_query(sql[, params])
-			generator method for queries
-				sql is string containing SQL syntax
-				params is list containing parameters
-			return generator with one row per iteration
-			each row is a Row Factory
-		'''
-
-		c = self._db.cursor()
-		c.execute(sql, params)
-		for r in c:
-			yield r
-
-	# ============================================================================
-	# query a row in the database
-	# ============================================================================
-	def sql_query_row(self, sql, params = ()):
-		'''
-			db.sql_query_row(sql[, params])
-			query for a single row
-				sql is string containing SQL syntax
-				params is list containing parameters
-			return single row from a Row Factory
-		'''
-
-		c = self._db.cursor()
-		c.execute(sql, params)
-		return c.fetchone()
-
-	# ============================================================================
-	# query a single value in the database
-	# ============================================================================
-	def sql_query_value(self, sql, params = ()):
-		'''
-			db.sql_query_row(sql[, params])
-			query for a single value
-				sql is string containing SQL syntax
-				params is list containing parameters
-			return single value
-		'''
-
-		c = self._db.cursor()
-		c.execute(sql, params)
-		return c.fetchone()[0]
-
 	# ============================================================================
 	# query a single record in the database
 	# ============================================================================
-	def getrec(self, id):
+	def get_record(self, id):
 		'''
 			db.getrec(id)
 			get a single row by id
 		'''
 
-		query = 'SELECT * FROM {} WHERE id =?'.format(self.table)
+		query = 'SELECT * FROM {} WHERE {} =?'.format(self.table, id)
 		c = self._db.execute(query, (id,))
 		for r in c:
 			yield r
@@ -109,7 +58,7 @@ class AmityDatabase:
 	# ============================================================================
 	# query all rows
 	# ============================================================================
-	def getrecs(self):
+	def get_records(self):
 		'''
 			db.getrecs()
 			get all rows, returns a generator of Row factories
@@ -147,7 +96,7 @@ class AmityDatabase:
 	# ============================================================================
 	# update a single value/record in the database
 	# ============================================================================
-	def update(self, id, rec):
+	def update(self, id=None, rec=None):
 		'''
 			db.update(id, rec)
 			update a row in the table
@@ -161,13 +110,14 @@ class AmityDatabase:
 		values = [ rec[v] for v in klist]
 
 		for i, k in enumerate(klist):
-			if k == 'id':
+			if k == id:
 				del klist[i]
 				del values[i]
 
-		q = 'UPDATE {} SET {} WHERE id =?'.format(
+		q = 'UPDATE {} SET {} WHERE {} =?'.format(
 				self.table,
-				', '.join(map(lambda str: '{} = ?'.format(str), klist))
+				', '.join(map(lambda str: '{} = ?'.format(str), klist)),
+				id
 			)
 
 		self._db.execute(q, values + [id])
@@ -183,7 +133,7 @@ class AmityDatabase:
 			delete a row from the table, by id
 		'''
 
-		query = 'DELETE FROM {} WHERE id=?'.format(self.table)
+		query = 'DELETE FROM {} WHERE {}=?'.format(self.table, id)
 		self._db.execute(query, [id])
 		self._db.commit()
 
@@ -223,52 +173,3 @@ class AmityDatabase:
 	def close(self):
 		self._db.close()
 		del self._dbFilename
-
-
-# ============================================================================
-# test db connection and operations
-# ============================================================================
-def test():
-	import os
-	fn = ':memory:'		# in-memory database
-	t = 'foo'
-
-	recs = [
-		dict(string = 'one'),
-		dict(string = 'two'),
-		dict(string = 'three')
-	]
-
-	print 'Create database file {} ...'.format(fn)
-	db = AmityDatabase(filename = fn, table = t)
-	print 'Done.'
-
-	print 'Creating table .....'
-	db.sql_do(' DROP TABLE IF EXISTS {}'.format(t))
-	db.sql_do(' CREATE TABLE {} (id INTEGER PRIMARY KEY, String TEXT) '.format(t))
-	print 'Done.'
-
-	print 'Insert into table ... '
-	for r in recs:
-		db.insert(r)
-	print 'Done.'
-
-	print 'Read from table'
-	for r in db.getrecs(): 
-		print r
-
-	print 'Update table'
-	db.update(2, dict(string = 'TWO'))
-	print dict(db.getrec(2))
-
-	print 'Insert an extra row ... '
-	newid = db.insert(dict(string = 'extra'))
-	print '(id is {})'.format(newid)
-	print dict(db.getrec(newid))
-	print 'Now delete it'
-	db.delete(newid)
-	for r in db.getrecs(): print r
-	db.close()
-
-if __name__ == '__main__':
-	test ()

@@ -140,7 +140,7 @@ class MyInteractive(cmd.Cmd):
                 allocation_output=amity.add_person(name=arg['<first_name>'], lname=arg['<last_name>'], fellow=arg['<role>'], accomodation=False)
             elif  arg['--accomodation'].lower() == 'y':
                 allocation_output=amity.add_person(name=arg['<first_name>'], lname=arg['<last_name>'], fellow=arg['<role>'], accomodation=True)
-            elif  arg['--accomodation'].lower() == '34':
+            elif  arg['--accomodation'].lower() == 'n':
                 allocation_output=amity.add_person(name=arg['<first_name>'], lname=arg['<last_name>'], fellow=arg['<role>'], accomodation=False)
             elif  arg['--accomodation'].lower() != 'y' or arg['--accomodation'].lower() != 'n':
                 cprint('                                  Invalid accommodation parameter', 'yellow')
@@ -208,7 +208,6 @@ class MyInteractive(cmd.Cmd):
 
         cprint('                                  SUCCEESFULY ADDED', 'green')
         cprint('----------------------------------------------------------------------------', 'magenta')
-        print
 
     @docopt_cmd
     def do_print_rooms(self,arg):
@@ -217,7 +216,6 @@ class MyInteractive(cmd.Cmd):
         cprint('                                  PRINT ALL ROOM', 'yellow')
         cprint('============================================================================', 'magenta')
         print amity.print_rooms()
-        print
         
 
     @docopt_cmd
@@ -234,7 +232,6 @@ class MyInteractive(cmd.Cmd):
         else:
             cprint('                              FAILED TO REASIGNED', 'red')
             cprint('----------------------------------------------------------------------------', 'magenta')
-            print
         
     @docopt_cmd
     def do_print_users(self, arg):
@@ -243,7 +240,6 @@ class MyInteractive(cmd.Cmd):
         cprint('                                  PRINT ALL USERS', 'yellow')
         cprint('============================================================================', 'magenta')
         amity.get_persons()
-        print
 
 
     @docopt_cmd
@@ -253,7 +249,6 @@ class MyInteractive(cmd.Cmd):
         cprint('                                  USER DETAILS', 'yellow')
         cprint('============================================================================', 'magenta')
         amity.get_person_details(arg['<person_id>'])
-        print
 
     @docopt_cmd
     def do_print_allocations(self, arg):
@@ -274,7 +269,6 @@ class MyInteractive(cmd.Cmd):
             amity.print_unallocated(file_out=arg['--o'])
         else:
             amity.print_unallocated()
-        print
 
     @docopt_cmd
     def do_print_room(self,arg):
@@ -283,7 +277,6 @@ class MyInteractive(cmd.Cmd):
         cprint('                                  PRINT ROOM OCCUPANTS', 'yellow')
         cprint('============================================================================', 'magenta')
         amity.print_room(arg['<room_name>'])
-        print
 
     @docopt_cmd
     def do_save_state(self,arg):
@@ -294,7 +287,6 @@ class MyInteractive(cmd.Cmd):
             cprint('============================================================================', 'magenta')
             cprint('                                  ERROR: SPECIFY DATABASE', 'red')
             cprint('============================================================================', 'magenta')
-        print
 
     @docopt_cmd
     def do_load_state(self,arg):

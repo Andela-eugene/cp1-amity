@@ -6,7 +6,14 @@ Desc      : Room superclass
 
 """
 
+# ============================================================================
+# necessary imports
+# ============================================================================
+from abc import ABCMeta
+
 class Room(object):
+
+	__metaclass__= ABCMeta
 
 	def __init__(self, **kwargs):
 
@@ -25,87 +32,49 @@ class Room(object):
 	# getter and setter methods for class attributes
 	# ============================================================================
 	def get_roomname(self):
+		'''
+			retrves the room name
+		'''
 		return self._roomname
 
 	def set_roomname(self, rmname):
+		'''
+			sets the room name
+		'''
 		self._roomname = rmname
 
 	def get_roomtype(self):
+		'''
+			get room type
+		'''
 		return self._roomtype
 
 	def set_roomtype(self, rmtype):
+		'''
+			set room type
+		'''
 		self._roomtype = rmtype
 
 	def get_room_id(self):
+		'''
+			get room identification number
+		'''
 		return self._room_id
 
 	def set_room_id(self, rmid):
+		'''
+			set room identification number
+		'''
 		self._room_id = rmid
 
 	def get_room_space(self):
+		'''
+			get room space available
+		'''
 		return self._room_space
 
 	def set_room_space(self, rmspace):
+		'''
+			sets room space available
+		'''
 		self._room_space = rmspace
-
-	def get_rooms(self):
-		return self._persons
-
-	def add_livingspace_or_office_to_rooms(self, **kwargs):
-		added_fellow = kwargs.get('fellow')
-		added_staff = kwargs.get('staff')
-
-		return None
-
-	# ============================================================================
-	# print room allocation
-	# ============================================================================
-	def print_allocations(self, output = False):
-
-		'''
-			Room.print_allocations()
-
-			Prints a list of room allocations onto the screen. the method also allows
-			outputing the result into a text file
-		'''
-
-		pass
-
-	# ============================================================================
-	# print unallocated people
-	# ============================================================================
-	def print_unallocated(self, output = False):
-
-		'''
-			Room.print_unallocated()
-
-			Prints a list of unallocated people onto the screen. the method also allows
-			outputing the result into a text file
-		'''
-
-		pass
-
-	# ============================================================================
-	# update room space method
-	# ============================================================================
-	def update_room_space(self):
-		pass
-
-	# ============================================================================
-	# free up room space.
-	# ============================================================================
-	def free_room_space(self):
-		pass
-
-	# ============================================================================
-	# add user to room
-	# ============================================================================
-	def add_user_to_room(self, user):
-		pass
-
-	# ============================================================================
-	# unique room name constraint
-	# ============================================================================
-	@staticmethod
-	def unique_room_name_contsraint(room_name):
-		pass

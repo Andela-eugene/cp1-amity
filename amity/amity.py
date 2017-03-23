@@ -32,7 +32,16 @@ class Amity(object):
     def __init__(self):
         self._rooms_object = {'offices': {}, 'livingspace': {}}
         self._persons = {"fellows": {}, "staff": {}}
-        self._unallocated_persons = {"fellows": {}, "staff_fellow": {}}
+
+
+    # ============================================================================
+    # getter methods
+    # ============================================================================
+    def get_persons_dict(self):
+        return self._persons
+
+    def get_rooms_dict(self):
+        return self._rooms_object
 
     # ============================================================================
     # create room from amity
@@ -95,6 +104,7 @@ class Amity(object):
                         cprint('                               {}'.format(room_created),'yellow')
             else:
                 cprint('                               NO ROOM(S) CREATED, ROOM(S) ALREADY EXIST', 'yellow')
+        return is_created
 
 
     # ============================================================================
@@ -152,6 +162,7 @@ class Amity(object):
     # get person details
     # ============================================================================
     def get_person_details(self, user_id):
+        user = None
         for k, v in self._persons.iteritems():
             if isinstance(v ,dict):
                 for k, x in v.iteritems():
@@ -171,15 +182,19 @@ class Amity(object):
                             else:
                                 cprint('                               NO ACCOMODATION ASSIGNED', 'yellow')
                         cprint('----------------------------------------------------------------------------', 'magenta')
-                        return x
+                        user = x
+                        break
+        return user
 
     # ============================================================================
     # get persons
     # ============================================================================
     def get_persons(self):
+        count = 0
         for k, v in self._persons.iteritems():
             if isinstance(v ,dict):
                 for k, x in v.iteritems():
+                        count=+1
                         cprint('                               FIRST NAME {}'.format(x.get_first_name()), 'yellow')
                         cprint('                               LAST NAME {}'.format(x.get_last_name()), 'yellow')
                         cprint('                               ROLE {}'.format(x.get_role()), 'yellow')
@@ -194,16 +209,17 @@ class Amity(object):
                             else:
                                 cprint('                               NO ACCOMODATION ASSIGNED', 'yellow')
                         cprint('----------------------------------------------------------------------------', 'magenta')
-
+        return count
+    
     # ============================================================================
     # get room details
     # ============================================================================
     def get_room_details(self, room_name):
         for k, v in self._rooms_object.iteritems():
             if isinstance(v ,dict):
-                for k, x in v.iteritems():
-                    if x.get_roomname() == room_name:
-                        return x
+                for room_key, room_value in v.iteritems():
+                    if room_key == room_name:
+                        return room_value
 
     # ============================================================================
     # get room details by id
@@ -223,7 +239,11 @@ class Amity(object):
     # add people from a txt file
     # ============================================================================
     def load_people(self, file = None):
-        file_loc = '/data/{}.txt'.format(file)
+        file_loc = None
+        if '/' in file:
+            file_loc = file
+        else:
+            file_loc = '/amity/data/{}.txt'.format(file)
         path = os.getcwd() + file_loc
         persons_file = open(path, 'r')
         load_output = list()
@@ -290,6 +310,7 @@ class Amity(object):
 
             cprint('                                 COPIED TO FILE', 'green')
             cprint('----------------------------------------------------------------------------', 'magenta')
+        return data_exists
 
     # ============================================================================
     # print allocated rooms and the persons allocated
@@ -340,6 +361,8 @@ class Amity(object):
 
             cprint('                                 COPIED TO FILE', 'green')
             cprint('----------------------------------------------------------------------------', 'magenta')
+
+        return data_exists
 
 
     # ============================================================================
@@ -476,6 +499,7 @@ class Amity(object):
 
         cprint('                             SAVING PERSON TO DB COMPLETED', 'yellow')
         cprint('----------------------------------------------------------------------------', 'magenta')
+        return 'Done'
 
 
 
@@ -485,13 +509,8 @@ class Amity(object):
     def load_state(self, load_data=None):
         roomDB = AmityRoomsDB(dbname = load_data, rooms = 'room')
         personDB = AmityPersonDB(dbname = load_data, person = 'person')
+        total_room_person_count = 0
 
-        # for n in name:
-
-        #         new_office = Office(n)
-
-        #         office_object_dict = {n: new_office}
-        #         self._rooms_object['offices'].update(office_object_dict)
         for records in roomDB.retrive_rooms(): 
             room_count = 0
             db_room_list = list()
@@ -506,6 +525,7 @@ class Amity(object):
                     db_room_list.append(record_data)
 
                 room_count+=1
+                total_room_person_count +=1
 
             if db_room_list[2] == 'OFFICE':
                 office_object = Office(db_room_list[1])
@@ -553,6 +573,7 @@ class Amity(object):
                     db_person_list.append(record_data)
 
                 person_count+=1
+                total_room_person_count +=1
 
             if db_person_list[3] == 'STAFF':
                 staff_object = Staff(fname= db_person_list[1], lname=db_person_list[2])
@@ -599,5 +620,7 @@ class Amity(object):
 
                 fellow_dict = {fellow_object.get_person_id(): fellow_object}
                 self._persons['fellows'].update(fellow_dict)
+
+        return 'done'
 
 
