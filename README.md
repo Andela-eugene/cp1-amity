@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Andela-eugene/cp1-amity.svg?branch=master)](https://travis-ci.org/Andela-eugene/cp1-amity)
 # cp1-amity Office and Livingspace allocation
 
 Amity is an application that runs on the terminal/command prompt, allowing allocation of office and living space to personel (fellow and staff). The applciation is modeled after Andela's room allocation system. Offices can occupy a maximum of 6 people while living spaces hold a maximum of 4 people. Moreover, the system should not allow a staff to be assigend to a livingspace and only assign fellows to the living space, only if the fellow opts for one.
