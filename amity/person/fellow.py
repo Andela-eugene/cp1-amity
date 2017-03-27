@@ -2,7 +2,8 @@
 File      : fellow.py
 Date      : February, 2017
 Author    : eugene liyai
-Desc      : Fellow class that holds fellow specification, attributes and room allocation procedure
+Desc      : Fellow class that holds fellow specification,
+attributes and room allocation procedure
 
 """
 
@@ -11,37 +12,32 @@ Desc      : Fellow class that holds fellow specification, attributes and room al
 # ============================================================================
 
 from person import Person
-from rooms.livingroom import Livingroom
-from rooms.office import Office
+
 
 class Fellow(Person):
-	
-	def __init__(self, name):
+    '''
+            Fellow class inherits from super class Person.
+            The class inherits all attributes and methods
+            from the parent class.
+            Initiates a fellow, and assignes the fellow role.
+    '''
 
-		super(Fellow, self).__init__(username = name, role= 'FELLOW')
-		self._accomodation_allocated = None
+    def __init__(self, fname=None, lname=None):
 
+        super(Fellow, self).__init__(fname=fname, lname=lname, role='FELLOW')
+        self._accomodation_allocated = None
 
-	# ============================================================================
-	# getter and setter methods for class attributes
-	# ============================================================================
-	def get_accomodation_allocated(self):
-		return self._accomodation_allocated
+    # ============================================================================
+    # getter and setter methods for class attributes
+    # ============================================================================
+    def get_accomodation_allocated(self):
+        '''
+                get fellow's room accomodation
+        '''
+        return self._accomodation_allocated
 
-	def set_accomodation_allocated(self, accomname):
-		self._accomodation_allocated = accomname
-
-	@staticmethod
-	def add_person(self, accomodation= 'N'):
-		'''
-			Fellow.add_person()
-			
-			add_person method adds the fellow to a random room.
-            The method checks for available rooms before assigning the fellow
-            to the room. Additionally, it checks if the fellow opts for accomodation space.
-		'''
-
-		
-
-		pass
-
+    def set_accomodation_allocated(self, accomname):
+        '''
+                set fellow's room accomodation
+        '''
+        self._accomodation_allocated = accomname

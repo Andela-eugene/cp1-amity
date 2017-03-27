@@ -14,47 +14,49 @@ from room import Room
 
 
 class Office(Room):
+    '''
+            Office class inherits from Room super class.
+            The class inherits all attributes and
+            methods from the parent class.
+            Initiates a Office room instance.
+    '''
 
-	def __init__(self, name):
+    def __init__(self, name):
 
-		super(Office, self).__init__(roomname = name, roomtype= 'OFFICE', roomspace= 6)
+        super(Office, self).__init__(
+            roomname=name, roomtype='OFFICE', roomspace=6)
 
+    # ============================================================================
+    # add to room
+    # ============================================================================
+    def update_room_space(self):
+        '''
+                Livingroom.update_office_space()
 
-	# ============================================================================
-	# add to room
-	# ============================================================================
-	def update_room_space(self):
+                updates the space available in the office instance.
+        '''
 
-		'''
-			Livingroom.update_office_space()
+        roomspace = self.get_room_space()
 
-			updates the space available in the office instance. 
-		'''
+        if roomspace > 0:
+            self.set_room_space(roomspace - 1)
+            return True
+        else:
+            return False
 
-		roomspace = self.get_room_space()
+    # ============================================================================
+    # remove from room
+    # ============================================================================
+    def free_room_space(self):
+        '''
+                Livingroom.free_office_space()
 
-		if roomspace > 0:
-			self.set_room_space(roomspace-1)
-			return True
-		else:
-			return False
+                frees up space in the office instance.
+        '''
+        roomspace = self.get_room_space()
 
-
-	# ============================================================================
-	# remove from room
-	# ============================================================================
-	def free_room_space(self):
-
-		'''
-			Livingroom.free_office_space()
-
-			frees up space in the office instance. 
-		'''
-		roomspace = self.get_room_space()
-
-		if 0 <= roomspace < 6 :
-			self.set_room_space(roomspace+1)
-			return True
-		else:
-			return False
-
+        if 0 <= roomspace < 6:
+            self.set_room_space(roomspace + 1)
+            return True
+        else:
+            return False

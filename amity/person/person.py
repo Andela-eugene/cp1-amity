@@ -6,122 +6,102 @@ Desc      : Person superclass
 
 """
 
+# ============================================================================
+# necessary imports
+# ============================================================================
+from abc import ABCMeta
+
+
 class Person(object):
-	
 
-	def __init__(self, **kwargs):
+    __metaclass__ = ABCMeta
 
-		'''
-			initiates person arguments
-			constructor method that implements room attributes and accesser methods
-		'''
+    def __init__(self, **kwargs):
+        '''
+                initiates person arguments
+                constructor method that implements
+                room attributes and accesser methods
+        '''
 
-		self._username = kwargs.get('username')
-		self._role = kwargs.get('role')
-		self._person_id = id(self)
-		self._boarding = False
-		self._total_persons = 0
-		self._persons = {"Fellows": {}, "Staff": {}}
-		self._office_allocated = None
+        self._first_name = kwargs.get('fname')
+        self._last_name = kwargs.get('lname')
+        self._role = kwargs.get('role')
+        self._person_id = id(self)
+        self._boarding = False
+        self._office_allocated = None
 
+    # ============================================================================
+    # getter and setter methods for class attributes
+    # ============================================================================
 
-	# ============================================================================
-	# getter and setter methods for class attributes
-	# ============================================================================
+    def get_first_name(self):
+        '''
+                retrves person's first name
+        '''
+        return self._first_name
 
-	def get_username(self):
-		return self._username
+    def set_first_name(self, uname):
+        '''
+                sets person's first name
+        '''
+        self._first_name = uname
 
-	def set_username(self, uname):
-		self._username = uname
+    def get_last_name(self):
+        '''
+                retrves person's last name
+        '''
+        return self._last_name
 
-	def get_office_allocated(self):
-		return self._office_allocated
+    def set_last_name(self, uname):
+        '''
+                sets person's last name
+        '''
+        self._last_name = uname
 
-	def set_office_allocated(self, offname):
-		self._office_allocated = offname
+    def get_office_allocated(self):
+        '''
+                retrves person's assigned office
+        '''
+        return self._office_allocated
 
-	def get_role(self):
-		return self._role
+    def set_office_allocated(self, offname):
+        '''
+                sets person's assigned office
+        '''
+        self._office_allocated = offname
 
-	def set_role(self, role):
-		self._role = role
+    def get_role(self):
+        '''
+                retrves person's role
+        '''
+        return self._role
 
-	def get_person_id(self):
-		return self._person_id
+    def set_role(self, role):
+        '''
+                sets person's role
+        '''
+        self._role = role
 
-	def set_person_id(self, pid):
-		self._person_id = pid
+    def get_person_id(self):
+        '''
+                retrves person's identification number
+        '''
+        return self._person_id
 
-	def get_boarding(self):
-		return self._boarding
+    def set_person_id(self, pid):
+        '''
+                sets person's identification number
+        '''
+        self._person_id = pid
 
-	def set_boarding(self, board):
-		self._boarding = board
+    def get_boarding(self):
+        '''
+                retrves person's boarding status
+        '''
+        return self._boarding
 
-	def get_total_persons(self):
-		return self._total_persons
-
-	def set_total_persons(self, ttlPpl):
-		self._total_persons = ttlPpl
-
-	def get_persons(self):
-		return self._persons
-
-	def add_fellow_or_staff_to_persons(self, **kwargs):
-		added_fellow = kwargs.get('fellow')
-		added_staff = kwargs.get('staff')
-
-		return None
-
-
-	# ============================================================================
-	# reallocates person to new room
-	# ============================================================================
-	def reallocate_person(self, userid, roomname):
-		'''
-			Person.reallocate_person()
-			
-			reallocates people to another room. the method takes the user identification number
-			and the roomname as parameters. 
-		'''
-
-		pass
-
-	# ============================================================================
-	# loads people to rooms from a text file
-	# ============================================================================
-	def load_people(self):
-		'''
-			Person.load_people()
-			
-			load_poeple populates room with data from a text file.
-		'''
-
-		pass
-
-	# ============================================================================
-	# get all users username
-	# ============================================================================
-	def get_all_usernames(self):
-		'''
-			Person.get_all_usernames()
-			
-			returns people's usernames in a list
-		'''
-
-		return []
-
-	# ============================================================================
-	# get person by user_id
-	# ============================================================================
-	@staticmethod
-	def get_person_by_id(id):
-		return None
-
-	# ============================================================================
-	# get person by user_id
-	# ============================================================================
-	@staticmethod
-	def get_person_by_username(name):
-		return None
+    def set_boarding(self, board):
+        '''
+                sets person's boarding status
+        '''
+        self._boarding = board

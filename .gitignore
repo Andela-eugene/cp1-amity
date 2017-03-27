@@ -7,3 +7,7 @@ static-collected
 static/.DS_Store
 
 .idea
+
+.cache
+
+testAmity.db
