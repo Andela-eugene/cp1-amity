@@ -126,6 +126,25 @@ python app.py -i
   print_allocations --o=room_allocations
   ```
   In this case the output file will be `room_allocations.txt`
+
+### Application Screenshots
+
+#### Amity Welcome
+![Screenshot of Welcome](https://github.com/Andela-eugene/cp1-amity/blob/master/amity/designs/AmityWelcomeScreen.png "Welcome")
+
+#### Amity Add Person
+![Screenshot of Add Person](https://github.com/Andela-eugene/cp1-amity/blob/master/amity/designs/AddPerson.png "Add Person")
+
+#### Amity Create Room
+![Screenshot of Create Room](https://github.com/Andela-eugene/cp1-amity/blob/master/amity/designs/CreateRoom.png "Add Person")
+
+#### Amity Print all users
+![Screenshot of Print all users](https://github.com/Andela-eugene/cp1-amity/blob/master/amity/designs/PrintAllUsers.png "Add Person")
+
+#### Amity Print Help
+![Screenshot of Print all users](https://github.com/Andela-eugene/cp1-amity/blob/master/amity/designs/Help.png "Add Person")
+
+
 ## Help
 
 For assistance using the application the `help` command prints out all valid commands and parametera required to run the application.
