@@ -38,15 +38,21 @@ class Amity(object):
     # getter methods
     # ============================================================================
     def get_persons_dict(self):
+        '''Return amity's person data struture'''
         return self._persons
 
     def get_rooms_dict(self):
+        '''Return amity's rooms data struture'''
         return self._rooms_object
 
     # ============================================================================
     # create room from amity
     # ============================================================================
     def create_room(self, name, r_type='office'):
+        '''
+        create room function, takes in room name
+        and room type as parameters
+        '''
         is_created = False
         not_created = list()
         created = list()
@@ -159,6 +165,10 @@ class Amity(object):
             staff=None,
             fellow=None,
             accomodation=False):
+        '''
+        add person function, takes in person's first name,
+        last name, role and accomodation as parameters
+        '''
 
         office_allocated = None
         accom_allocated = None
@@ -216,6 +226,11 @@ class Amity(object):
     # get person details
     # ============================================================================
     def get_person_details(self, user_id):
+        '''
+        the function searches for person with id provided
+        in the data structure and returns the user object.
+        The function takes user_id as the parameter
+        '''
         user = None
         for k, v in self._persons.iteritems():
             if isinstance(v, dict):
@@ -274,6 +289,9 @@ class Amity(object):
     # get persons
     # ============================================================================
     def get_persons(self):
+        '''
+        returns all persons in the data structure
+        '''
         count = 0
         for k, v in self._persons.iteritems():
             if isinstance(v, dict):
@@ -324,6 +342,10 @@ class Amity(object):
     # get room details
     # ============================================================================
     def get_room_details(self, room_name):
+        '''
+        searches for room in the data structure and returns
+        the room object. Takes room name as input
+        '''
         for k, v in self._rooms_object.iteritems():
             if isinstance(v, dict):
                 for room_key, room_value in v.iteritems():
@@ -334,6 +356,10 @@ class Amity(object):
     # get room details by id
     # ============================================================================
     def get_room_details_by_id(self, room_id):
+        '''
+        searches for room in the data structure and returns
+        the room object. Takes room_id name as input
+        '''
         for k, v in self._rooms_object.iteritems():
             if isinstance(v, dict):
                 for k, x in v.iteritems():
@@ -347,6 +373,11 @@ class Amity(object):
     # add people from a txt file
     # ============================================================================
     def load_people(self, file=None):
+        '''
+        loads people into the data struture from text file
+        and assignes them
+        rooms. 
+        '''
         file_loc = None
         if '/' in file:
             file_loc = file
@@ -382,6 +413,9 @@ class Amity(object):
     # print un allocated rooms
     # ============================================================================
     def print_unallocated(self, file_out=None):
+        '''
+        prints all unallocated persons
+        '''
         data_exists = False
         cprint(
             '=========================================' +
@@ -472,6 +506,9 @@ class Amity(object):
     # print allocated rooms and the persons allocated
     # ============================================================================
     def print_allocated(self, file_out=None):
+        '''
+        prints all allocated persons
+        '''
         data_exists = False
 
         for k, v in self._persons.iteritems():
@@ -561,6 +598,9 @@ class Amity(object):
     # print room details
     # ============================================================================
     def print_room(self, roomname):
+        '''
+        print room and all its occupants
+        '''
         for k, v in self._persons.iteritems():
             if isinstance(v, dict):
                 for k, x in v.iteritems():
@@ -600,6 +640,9 @@ class Amity(object):
     # print room details
     # ============================================================================
     def print_rooms(self):
+        '''
+        prints all rooms and space available
+        '''
         for k, v in self._rooms_object.iteritems():
             if isinstance(v, dict):
                 for k, x in v.iteritems():
@@ -620,6 +663,10 @@ class Amity(object):
     # create unique room name constaraint
     # ============================================================================
     def is_room_name_unique(self, roomname):
+        '''
+        checks whether room name is unique, returns
+        falls if not unique
+        '''
         is_unique = True
         for room_dict_key, room_dict_value in self._rooms_object.iteritems():
             if isinstance(room_dict_value, dict):
@@ -633,6 +680,11 @@ class Amity(object):
     # reallocate person to new room
     # ============================================================================
     def reallocate_person(self, person_id, roomname):
+        '''
+        reallocates person to new room. Checks what kind of
+        room before reallocation. returns true or false
+        indicating if reallocation was successful
+        '''
         user = self.get_person_details(person_id)
         prev_off_room = user.get_office_allocated().get_roomname()
         prev_accom_room = None
@@ -685,7 +737,10 @@ class Amity(object):
     # save data to database
     # ============================================================================
     def save_state(self, save_data=None):
-        '''Save rooms first'''
+        '''
+        saves amity data structure into a
+        database. takes database name as parameter
+        '''
         roomDB = AmityRoomsDB(dbname=save_data, rooms='room')
         personDB = AmityPersonDB(dbname=save_data, person='person')
         cprint('                             SAVING ROOMS TO DB', 'yellow')
@@ -765,6 +820,10 @@ class Amity(object):
     # loads a previously saved state
     # ============================================================================
     def load_state(self, load_data=None):
+        '''
+        loads amity data structure from a
+        database. takes database name as parameter
+        '''
         roomDB = AmityRoomsDB(dbname=load_data, rooms='room')
         personDB = AmityPersonDB(dbname=load_data, person='person')
         total_room_person_count = 0
