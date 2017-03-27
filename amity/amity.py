@@ -375,8 +375,8 @@ class Amity(object):
     def load_people(self, file=None):
         '''
         loads people into the data struture from text file
-        and assignes them
-        rooms. 
+        and assignes the
+        rooms
         '''
         file_loc = None
         if '/' in file:
