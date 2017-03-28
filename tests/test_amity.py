@@ -23,8 +23,8 @@ class AmityTest(TestCase):
     def setUp(self):
         self.amity = Amity()
         self.amity.create_room(['occulus'])
-        self.amity.create_room(['krypton'], r_type='accomodation')
-        self.amity.create_room(['php'], r_type='accomodation')
+        self.amity.create_room(['krypton'], room_type='accomodation')
+        self.amity.create_room(['php'], room_type='accomodation')
         self.amity.add_person('Kim', 'Wang', staff='staff')
         self.amity.add_person(
             'Yung', 'Ping', fellow='fellow', accomodation=True)
