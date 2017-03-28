@@ -12,12 +12,12 @@ Desc      : Amity is a controller class that runs the application
 import os
 
 from collections import OrderedDict
+from termcolor import cprint, colored
 
 from rooms.livingroom import Livingroom
 from rooms.office import Office
 from person.fellow import Fellow
 from person.staff import Staff
-from termcolor import cprint, colored
 
 from models.amityRoomDB import AmityRoomsDB
 from models.amityPersonDB import AmityPersonDB
@@ -48,7 +48,7 @@ class Amity(object):
     # ============================================================================
     # create room from amity
     # ============================================================================
-    def create_room(self, name, r_type='office'):
+    def create_room(self, name, room_type='office'):
         '''
         create room function, takes in room name
         and room type as parameters
@@ -56,18 +56,18 @@ class Amity(object):
         is_created = False
         not_created = list()
         created = list()
-        if r_type.lower() == 'office':
-            for n in name:
+        if room_type.lower() == 'office':
+            for room_name in name:
 
-                if self.is_room_name_unique(n):
-                    new_office = Office(n)
+                if self.is_room_name_unique(room_name):
+                    new_office = Office(room_name)
 
-                    office_object_dict = {n: new_office}
+                    office_object_dict = {room_name: new_office}
                     self._rooms_object['offices'].update(office_object_dict)
-                    created.append(n)
+                    created.append(room_name)
                     is_created = True
                 else:
-                    not_created.append(n)
+                    not_created.append(room_name)
 
             if is_created:
                 if len(not_created):
@@ -105,17 +105,17 @@ class Amity(object):
                     ' ROOM(S) ALREADY EXIST',
                     'yellow')
 
-        elif r_type.lower() == 'accomodation':
-            for n in name:
-                if self.is_room_name_unique(n):
-                    new_living = Livingroom(n)
+        elif room_type.lower() == 'accomodation':
+            for room_name in name:
+                if self.is_room_name_unique(room_name):
+                    new_living = Livingroom(room_name)
 
-                    living_dict = {n: new_living}
+                    living_dict = {room_name: new_living}
                     self._rooms_object['livingspace'].update(living_dict)
-                    created.append(n)
+                    created.append(room_name)
                     is_created = True
                 else:
-                    not_created.append(n)
+                    not_created.append(room_name)
 
             if is_created:
                 if len(not_created):
@@ -171,7 +171,7 @@ class Amity(object):
         '''
 
         office_allocated = None
-        accom_allocated = None
+        accomodation_allocated = None
 
         if staff is not None and fellow is None:
             new_staff = Staff(fname=name, lname=lname)
@@ -179,11 +179,11 @@ class Amity(object):
             staff_dict = {new_staff.get_person_id(): new_staff}
             self._persons['staff'].update(staff_dict)
 
-            for k, v in self._rooms_object['offices'].iteritems():
-                if v.get_room_space() > 0:
-                    new_staff.set_office_allocated(v)
-                    v.update_room_space()
-                    office_allocated = v.get_roomname()
+            for room_key, room_value in self._rooms_object['offices'].iteritems():
+                if room_value.get_room_space() > 0:
+                    new_staff.set_office_allocated(room_value)
+                    room_value.update_room_space()
+                    office_allocated = room_value.get_roomname()
                     break
 
         elif staff is None and fellow is not None:
@@ -197,18 +197,18 @@ class Amity(object):
 
                 new_fellow.set_boarding(True)
 
-                for k, v in self._rooms_object['livingspace'].iteritems():
-                    if v.get_room_space() > 0:
-                        new_fellow.set_accomodation_allocated(v)
-                        v.update_room_space()
-                        accom_allocated = v.get_roomname()
+                for room_key, room_value in self._rooms_object['livingspace'].iteritems():
+                    if room_value.get_room_space() > 0:
+                        new_fellow.set_accomodation_allocated(room_value)
+                        room_value.update_room_space()
+                        accomodation_allocated = room_value.get_roomname()
                         break
 
-            for k, v in self._rooms_object['offices'].iteritems():
-                if v.get_room_space() > 0:
-                    new_fellow.set_office_allocated(v)
-                    v.update_room_space()
-                    office_allocated = v.get_roomname()
+            for room_key, room_value in self._rooms_object['offices'].iteritems():
+                if room_value.get_room_space() > 0:
+                    new_fellow.set_office_allocated(room_value)
+                    room_value.update_room_space()
+                    office_allocated = room_value.get_roomname()
                     break
 
         return OrderedDict([('first_name',
@@ -220,7 +220,7 @@ class Amity(object):
                             ('Office_name',
                              office_allocated),
                             ('Accom_name',
-                             accom_allocated)])
+                             accomodation_allocated)])
 
     # ============================================================================
     # get person details
@@ -232,46 +232,46 @@ class Amity(object):
         The function takes user_id as the parameter
         '''
         user = None
-        for k, v in self._persons.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
-                    if k == int(user_id):
+        for person_key_dict, person_value_dict in self._persons.iteritems():
+            if isinstance(person_value_dict, dict):
+                for person_key, person_value in person_value_dict.iteritems():
+                    if person_key == int(user_id):
                         cprint(
                             '                               ' +
                             'FIRST NAME {}'.format(
-                                x.get_first_name()), 'yellow')
+                                person_value.get_first_name()), 'yellow')
                         cprint(
                             '                               ' +
                             'LAST NAME {}'.format(
-                                x.get_last_name()), 'yellow')
+                                person_value.get_last_name()), 'yellow')
                         cprint(
                             '                               ' +
                             'ROLE {}'.format(
-                                x.get_role()), 'yellow')
+                                person_value.get_role()), 'yellow')
                         cprint(
                             '                               ' +
                             'USER_ID {}'.format(
-                                x.get_person_id()), 'yellow')
+                                person_value.get_person_id()), 'yellow')
                         cprint(
                             '                               ' +
                             'BOARDING {}'.format(
-                                x.get_boarding()), 'yellow')
-                        if x.get_office_allocated() is not None:
+                                person_value.get_boarding()), 'yellow')
+                        if person_value.get_office_allocated() is not None:
                             cprint(
                                 '                            ' +
                                 '   OFFICE ASSIGNED {}'.format(
-                                    x.get_office_allocated()
+                                    person_value.get_office_allocated()
                                     .get_roomname()), 'yellow')
                         else:
                             cprint(
                                 '                               ' +
                                 'OFFICE ASSIGNED NONE', 'yellow')
-                        if x.get_role() == 'FELLOW':
-                            if x.get_accomodation_allocated() is not None:
+                        if person_value.get_role() == 'FELLOW':
+                            if person_value.get_accomodation_allocated() is not None:
                                 cprint(
                                     '                            ' +
                                     '   ACCOMODATION ASSIGNED {}'.format(
-                                        x.get_accomodation_allocated()
+                                        person_value.get_accomodation_allocated()
                                         .get_roomname()), 'yellow')
                             else:
                                 cprint(
@@ -281,7 +281,7 @@ class Amity(object):
                             '---------------------------------------' +
                             '-------------------------------------',
                             'magenta')
-                        user = x
+                        user = person_value
                         break
         return user
 
@@ -293,40 +293,40 @@ class Amity(object):
         returns all persons in the data structure
         '''
         count = 0
-        for k, v in self._persons.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
+        for person_key_dict, person_value_dict in self._persons.iteritems():
+            if isinstance(person_value_dict, dict):
+                for person_key, person_value in person_value_dict.iteritems():
                     count = +1
                     cprint(
                         '                               ' +
                         'FIRST NAME {}'.format(
-                            x.get_first_name()), 'yellow')
+                            person_value.get_first_name()), 'yellow')
                     cprint(
                         '                               ' +
                         'LAST NAME {}'.format(
-                            x.get_last_name()), 'yellow')
+                            person_value.get_last_name()), 'yellow')
                     cprint('                             ' +
                            '  ROLE {}'.format(
-                               x.get_role()), 'yellow')
+                               person_value.get_role()), 'yellow')
                     cprint('                             ' +
                            '  USER_ID {}'.format(
-                               x.get_person_id()), 'yellow')
-                    if x.get_office_allocated() is not None:
+                               person_value.get_person_id()), 'yellow')
+                    if person_value.get_office_allocated() is not None:
                         cprint(
                             '                             ' +
                             '  OFFICE ASSIGNED {}'.format(
-                                x.get_office_allocated()
+                                person_value.get_office_allocated()
                                 .get_roomname()), 'yellow')
                     else:
                         cprint(
                             '                             ' +
                             '  NO OFFICE ASSIGNED',
                             'yellow')
-                    if x.get_role() == 'FELLOW':
-                        if x.get_accomodation_allocated() is not None:
+                    if person_value.get_role() == 'FELLOW':
+                        if person_value.get_accomodation_allocated() is not None:
                             cprint('                         ' +
                                    '      ACCOMODATION ASSIGNED {}'.format(
-                                       x.get_accomodation_allocated()
+                                       person_value.get_accomodation_allocated()
                                        .get_roomname()), 'yellow')
                         else:
                             cprint(
@@ -346,9 +346,9 @@ class Amity(object):
         searches for room in the data structure and returns
         the room object. Takes room name as input
         '''
-        for k, v in self._rooms_object.iteritems():
-            if isinstance(v, dict):
-                for room_key, room_value in v.iteritems():
+        for room_key_dict, room_value_dict in self._rooms_object.iteritems():
+            if isinstance(room_value_dict, dict):
+                for room_key, room_value in room_value_dict.iteritems():
                     if room_key == room_name:
                         return room_value
 
@@ -360,12 +360,12 @@ class Amity(object):
         searches for room in the data structure and returns
         the room object. Takes room_id name as input
         '''
-        for k, v in self._rooms_object.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
+        for room_key_dict, room_value_dict in self._rooms_object.iteritems():
+            if isinstance(room_value_dict, dict):
+                for room_key, room_value in room_value_dict.iteritems():
                     if room_id is not None:
-                        if x.get_room_id() == int(room_id):
-                            return x
+                        if room_value.get_room_id() == int(room_id):
+                            return room_value
                     else:
                         return None
 
@@ -427,34 +427,34 @@ class Amity(object):
             '==========================================' +
             '==================================',
             'magenta')
-        for k, v in self._persons.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
-                    if x.get_office_allocated() is None:
+        for person_key_dict, person_value_dict in self._persons.iteritems():
+            if isinstance(person_value_dict, dict):
+                for person_key, person_value in person_value_dict.iteritems():
+                    if person_value.get_office_allocated() is None:
                         data_exists = True
                         cprint('                             ' +
                                '    {} {}:'.format(
-                                   x.get_first_name(),
-                                   x.get_last_name()), 'magenta')
+                                   person_value.get_first_name(),
+                                   person_value.get_last_name()), 'magenta')
                         cprint(
                             '                                 ' +
                             '       UNALLOCATED OFFICESPACE',
                             'yellow')
-                        if (x.get_boarding() and
-                                x.get_accomodation_allocated() is
+                        if (person_value.get_boarding() and
+                                person_value.get_accomodation_allocated() is
                                 None):
                             cprint(
                                 '                             ' +
                                 '           UNALLOCATED LIVINGSPACE', 'yellow')
-                    if (x.get_office_allocated() is not None and
-                        x.get_boarding(
+                    if (person_value.get_office_allocated() is not None and
+                        person_value.get_boarding(
                     ) and
-                            x.get_accomodation_allocated() is None):
+                            person_value.get_accomodation_allocated() is None):
                         data_exists = True
                         cprint('                               ' +
                                '  {} {}:'.format(
-                                   x.get_first_name(),
-                                   x.get_last_name()), 'magenta')
+                                   person_value.get_first_name(),
+                                   person_value.get_last_name()), 'magenta')
                         cprint(
                             '                                 ' +
                             '       UNALLOCATED LIVINGSPACE',
@@ -473,25 +473,25 @@ class Amity(object):
             path = os.getcwd() + file_loc
             alloc_file = open(path, 'w+')
 
-            for k, v in self._persons.iteritems():
-                if isinstance(v, dict):
-                    for k, x in v.iteritems():
-                        if x.get_office_allocated() is None:
+            for person_key_dict, person_value_dict in self._persons.iteritems():
+                if isinstance(person_value_dict, dict):
+                    for person_key, person_value in v.iteritems():
+                        if person_value.get_office_allocated() is None:
                             print >> alloc_file, '{} {}:'.format(
-                                x.get_first_name(),
-                                x.get_last_name())
+                                person_value.get_first_name(),
+                                person_value.get_last_name())
                             print >> alloc_file, 'UNALLOCATED OFFICESPACE'
-                            if (x.get_boarding() and
-                                    x.get_accomodation_allocated() is
+                            if (person_value.get_boarding() and
+                                    person_value.get_accomodation_allocated() is
                                     None):
                                 print >> alloc_file, 'UNALLOCATED LIVINGSPACE'
-                        if (x.get_office_allocated() is not
+                        if (person_value.get_office_allocated() is not
                             None and
-                            x.get_boarding(
+                            person_value.get_boarding(
                         ) and
-                                x.get_accomodation_allocated() is None):
+                                person_value.get_accomodation_allocated() is None):
                             print >> alloc_file, '{} {}:'.format(
-                                x.get_first_name(), x.get_last_name())
+                                person_value.get_first_name(), person_value.get_last_name())
                             print >> alloc_file, 'UNALLOCATED LIVINGSPACE'
 
             cprint('                                 ' +
@@ -511,39 +511,39 @@ class Amity(object):
         '''
         data_exists = False
 
-        for k, v in self._persons.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
-                    if x.get_office_allocated() is not None:
+        for person_key_dict, person_value_dict in self._persons.iteritems():
+            if isinstance(person_value_dict, dict):
+                for person_key, person_value in person_value_dict.iteritems():
+                    if person_value.get_office_allocated() is not None:
                         data_exists = True
                         cprint('                              ' +
                                '   {} {}:'.format(
-                                   x.get_first_name(),
-                                   x.get_last_name()), 'magenta')
+                                   person_value.get_first_name(),
+                                   person_value.get_last_name()), 'magenta')
                         cprint(
                             '                                     ' +
                             '   OFFICE: {}'.format(
-                                x.get_office_allocated()
+                                person_value.get_office_allocated()
                                 .get_roomname()), 'yellow')
-                        if x.get_boarding():
-                            if x.get_accomodation_allocated() is not None:
+                        if person_value.get_boarding():
+                            if person_value.get_accomodation_allocated() is not None:
                                 cprint(
                                     '                               ' +
                                     '         ACCOMODATION: {}'.format(
-                                        x.get_accomodation_allocated()
+                                        person_value.get_accomodation_allocated()
                                         .get_roomname()), 'yellow')
 
-                    if x.get_office_allocated() is None and x.get_boarding():
-                        if x.get_accomodation_allocated() is not None:
+                    if person_value.get_office_allocated() is None and person_value.get_boarding():
+                        if person_value.get_accomodation_allocated() is not None:
                             data_exists = True
                             cprint(
                                 '                               ' +
                                 '  {} {}:'.format(
-                                    x.get_first_name(),
-                                    x.get_last_name()), 'magenta')
+                                    person_value.get_first_name(),
+                                    person_value.get_last_name()), 'magenta')
                             cprint('                                ' +
                                    '        ACCOMODATION: {}'.format(
-                                       x.get_accomodation_allocated()
+                                       person_value.get_accomodation_allocated()
                                        .get_roomname()), 'yellow')
 
         if not data_exists:
@@ -559,30 +559,30 @@ class Amity(object):
             path = os.getcwd() + file_loc
             alloc_file = open(path, 'w+')
 
-            for k, v in self._persons.iteritems():
-                if isinstance(v, dict):
-                    for k, x in v.iteritems():
-                        if x.get_office_allocated():
+            for person_key_dict, person_value_dict in self._persons.iteritems():
+                if isinstance(person_value_dict, dict):
+                    for person_key, person_value in person_value_dict.iteritems():
+                        if person_value.get_office_allocated():
                             print >> alloc_file, '{} {}'.format(
-                                x.get_first_name(), x.get_last_name())
+                                person_value.get_first_name(), person_value.get_last_name())
                             print >> alloc_file, 'OFFICE: {}'.format(
-                                x.get_office_allocated().get_roomname())
-                            if x.get_boarding():
-                                if x.get_accomodation_allocated():
+                                person_value.get_office_allocated().get_roomname())
+                            if person_value.get_boarding():
+                                if person_value.get_accomodation_allocated():
                                     print >> (alloc_file,
                                               'ACCOMODATION: {}'.format(
-                                                  x.
+                                                  person_value.
                                                   get_accomodation_allocated()
                                                   .get_roomname()))
-                        if (x.get_office_allocated() is
+                        if (person_value.get_office_allocated() is
                                 None and
-                                x.get_boarding()):
-                            if x.get_accomodation_allocated():
+                                person_value.get_boarding()):
+                            if person_value.get_accomodation_allocated():
                                 print >> alloc_file, '{} {}'.format(
-                                    x.get_first_name(), x.get_last_name())
+                                    person_value.get_first_name(), person_value.get_last_name())
                                 print >> (alloc_file, 'ACCOMODATION: {}'
                                           .format(
-                                              x.get_accomodation_allocated()
+                                              person_value.get_accomodation_allocated()
                                               .get_roomname()))
 
             cprint('                                 ' +
@@ -601,35 +601,35 @@ class Amity(object):
         '''
         print room and all its occupants
         '''
-        for k, v in self._persons.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
-                    if (x.get_office_allocated() is not
+        for person_key_dict, person_value_dict in self._persons.iteritems():
+            if isinstance(person_value_dict, dict):
+                for person_key, person_value in person_value_dict.iteritems():
+                    if (person_value.get_office_allocated() is not
                         None and
-                        x.get_office_allocated(
+                        person_value.get_office_allocated(
                     ).get_roomname() == roomname):
                         cprint(
                             '                                 ' +
                             'ROOM: {}, OCCUPANT: {} {}'.format(
-                                x.get_office_allocated().get_roomname(),
-                                x.get_first_name(),
-                                x.get_last_name()),
+                                person_value.get_office_allocated().get_roomname(),
+                                person_value.get_first_name(),
+                                person_value.get_last_name()),
                             'yellow')
                         cprint(
                             '-------------------------------' +
                             '---------------------------------------------',
                             'magenta')
-                    if (x.get_role() == 'FELLOW' and
-                            x.get_accomodation_allocated() is not
+                    if (person_value.get_role() == 'FELLOW' and
+                            person_value.get_accomodation_allocated() is not
                             None and
-                            x.get_accomodation_allocated()
+                            person_value.get_accomodation_allocated()
                             .get_roomname() == roomname):
                         cprint(
                             '                                 ' +
                             'ROOM: {}, OCCUPANT: {} {}'.format(
-                                x.get_accomodation_allocated().get_roomname(),
-                                x.get_first_name(),
-                                x.get_last_name()),
+                                person_value.get_accomodation_allocated().get_roomname(),
+                                person_value.get_first_name(),
+                                person_value.get_last_name()),
                             'yellow')
                         cprint(
                             '-------------------------------' +
@@ -643,17 +643,17 @@ class Amity(object):
         '''
         prints all rooms and space available
         '''
-        for k, v in self._rooms_object.iteritems():
-            if isinstance(v, dict):
-                for k, x in v.iteritems():
+        for room_key_dict, room_value_dict in self._rooms_object.iteritems():
+            if isinstance(room_value_dict, dict):
+                for room_key, room_value in room_value_dict.iteritems():
                     cprint('                                 {}'.format(
-                        x.get_roomname()), 'yellow')
+                        room_value.get_roomname()), 'yellow')
                     cprint('                                 {}'.format(
-                        x.get_room_id()), 'yellow')
+                        room_value.get_room_id()), 'yellow')
                     cprint('                                 {}'.format(
-                        x.get_roomtype()), 'yellow')
+                        room_value.get_roomtype()), 'yellow')
                     cprint('                                 {}'.format(
-                        x.get_room_space()), 'yellow')
+                        room_value.get_room_space()), 'yellow')
                     cprint(
                         '----------------------------------' +
                         '------------------------------------------',
@@ -902,6 +902,7 @@ class Amity(object):
                 total_room_person_count += 1
 
             if db_person_list[3] == 'STAFF':
+                office_name = None
                 staff_object = Staff(fname=db_person_list[
                                      1], lname=db_person_list[2])
                 staff_object.set_person_id(db_person_list[0])
@@ -916,6 +917,7 @@ class Amity(object):
                     office_room = self.get_room_details_by_id(
                         db_person_list[5])
                     staff_object.set_office_allocated(office_room)
+                    office_name = office_room.get_roomname()
 
                 print(' STAFF CREATED FROM DB: {} {}, ID: {}, ' +
                       'ROLE: {}, BOARDING: {}, OFFICE NAME: {}'
@@ -925,7 +927,7 @@ class Amity(object):
                           staff_object.get_person_id(),
                           staff_object.get_role(),
                           staff_object.get_boarding(),
-                          staff_object.get_office_allocated().get_roomname()))
+                          office_name))
 
                 staff_dict = {staff_object.get_person_id(): staff_object}
                 self._persons['staff'].update(staff_dict)
@@ -935,15 +937,18 @@ class Amity(object):
                 fellow_object.set_person_id(db_person_list[0])
                 fellow_object.set_role(db_person_list[3])
 
+                office_name = None
+
                 if db_person_list[4]:
                     fellow_object.set_boarding(True)
                 else:
                     fellow_object.set_boarding(False)
 
-                if len(db_person_list) > 5:
+                if len(db_person_list) > 5 and db_person_list[5] is not None:
                     office_room = self.get_room_details_by_id(
                         db_person_list[5])
                     fellow_object.set_office_allocated(office_room)
+                    office_name = office_room.get_roomname()
 
                 if len(db_person_list) > 6:
                     accom_room = self.get_room_details_by_id(db_person_list[6])
@@ -964,7 +969,7 @@ class Amity(object):
                           fellow_object.get_person_id(),
                           fellow_object.get_role(),
                           fellow_object.get_boarding(),
-                          fellow_object.get_office_allocated().get_roomname(),
+                          office_name,
                           accomodation))
 
                 fellow_dict = {fellow_object.get_person_id(): fellow_object}

@@ -1,1 +1,8 @@
-{}
+{
+  "tests/test_amity.py::AmityTest::test_load_state_from_database": true, 
+  "tests/test_amity.py::AmityTest::test_save_state_into_database": true, 
+  "tests/test_database.py::DatabaseTest::test_add_persons_to_db": true, 
+  "tests/test_database.py::DatabaseTest::test_delete_person_in_db": true, 
+  "tests/test_database.py::DatabaseTest::test_insert_room_in_db": true, 
+  "tests/test_database.py::DatabaseTest::test_update_person_in_db": true
+}

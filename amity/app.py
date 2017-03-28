@@ -30,11 +30,11 @@ Note:
 import sys
 import cmd
 
-
 from termcolor import cprint, colored
 from termcolor import cprint
 from pyfiglet import figlet_format
 from docopt import docopt, DocoptExit
+
 from amity import Amity
 
 
@@ -130,9 +130,9 @@ class MyInteractive(cmd.Cmd):
     def do_create_room(self, arg):
         """Usage: create_room <room_name>... [--type=office]"""
         if arg['--type'] is None:
-            amity.create_room(arg['<room_name>'], r_type='office')
+            amity.create_room(arg['<room_name>'], room_type='office')
         else:
-            amity.create_room(arg['<room_name>'], r_type=arg['--type'])
+            amity.create_room(arg['<room_name>'], room_type=arg['--type'])
         print
 
     @docopt_cmd
