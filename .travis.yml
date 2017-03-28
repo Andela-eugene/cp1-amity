@@ -5,7 +5,6 @@ install:
 # - pip install --user -r requirements.txt
 - pip install coveralls
 
-- scripts: nosetests
+scripts: - nosetests
 
-- after_success:
-  coveralls
+after_success: - coveralls
