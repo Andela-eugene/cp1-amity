@@ -5,5 +5,4 @@ install:
 - pip install -r requirements.txt
 - pip install coveralls
 script: nosetests
-after_success: - coveralls
-
+after_success: coveralls
