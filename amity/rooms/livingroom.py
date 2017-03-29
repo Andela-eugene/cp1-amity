@@ -38,7 +38,7 @@ class Livingroom(Room):
 
         roomspace = self.get_room_space()
 
-        if roomspace > 0:
+        if roomspace:
             self.set_room_space(roomspace - 1)
             return True
         else:
