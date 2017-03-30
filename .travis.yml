@@ -4,5 +4,5 @@ python:
 install:
 - pip install -r requirements.txt
 - pip install coveralls
-script: nosetests
+script: nosetests --with-coverage --cover-package=amity
 after_success: coveralls
