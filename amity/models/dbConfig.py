@@ -138,38 +138,8 @@ class AmityDatabase:
         self._db.commit()
 
     # ============================================================================
-    # count the records in the table
-    # ============================================================================
-    def countrecs(self):
-        '''
-                db.countrecs()
-                count the records in the table
-                return a single integer value
-        '''
-
-        query = 'SELECT COUNT(*) FROM {}'.format(self.table)
-        c = self._db.cursor()
-        c.execute(query)
-        return c.fetchone()[0]
-
-    # Filename property
-    @property
-    def filename(self):
-        return self._dbFilename
-
-    @filename.setter
-    def filename(self, fn):
-        # self._dbFilename = fn
-        # self._db = sqlite3.connect(fn)
-        self._db.row_factory = sqlite3.Row
-
-    @filename.deleter
-    def filename(self):
-        self.close()
-
-    # ============================================================================
     # Diconnect database
     # ============================================================================
-    def close(self):
-        self._db.close()
-        del self._dbFilename
+    # def close(self):
+    #     self._db.close()
+    #     del self._dbFilename

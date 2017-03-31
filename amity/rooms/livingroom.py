@@ -53,10 +53,11 @@ class Livingroom(Room):
 
                 frees up space in the office instance.
         '''
+        free_space = False
         roomspace = self.get_room_space()
 
         if 0 <= roomspace < 4:
             self.set_room_space(roomspace + 1)
-            return True
-        else:
-            return False
+            free_space = True
+
+        return free_space
