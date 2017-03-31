@@ -10,9 +10,6 @@ Desc      : Deconstracts database model and issues sql syntax
 # necessary imports
 # ============================================================================
 
-import sys
-import os
-import sqlite3
 from dbConfig import AmityDatabase
 
 
@@ -35,12 +32,6 @@ class AmityPersonDB:
             FOREIGN KEY (office_allocated) REFERENCES room(room_id),
             FOREIGN KEY (accomodation_allocated) REFERENCES room(room_id))
             '''.format(self.table))
-
-    def plain_sql_statement(self, sql, *params):
-        '''
-                execute plaun sql statement
-        '''
-        self._db.sql_do(sql, params)
 
     def insert_person(self, row):
         '''
@@ -65,9 +56,3 @@ class AmityPersonDB:
                 update a single person in the database using person_id as key
         '''
         self._db.update(key, rec)
-
-    def delete_person(self, key):
-        '''
-                deletes person from database using person_id as key
-        '''
-        self._db.delete(key)

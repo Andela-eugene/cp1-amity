@@ -12,7 +12,7 @@ Desc      : Amity is a controller class that runs the application
 import os
 
 from collections import OrderedDict
-from termcolor import cprint, colored
+from termcolor import cprint
 
 from rooms.livingroom import Livingroom
 from rooms.office import Office
@@ -378,11 +378,8 @@ class Amity(object):
         and assignes the
         rooms
         '''
-        file_loc = None
-        if '/' in file:
-            file_loc = file
-        else:
-            file_loc = '/amity/data/{}.txt'.format(file)
+
+        file_loc = '/amity/data/{}.txt'.format(file)
         path = os.getcwd() + file_loc
         persons_file = open(path, 'r')
         load_output = list()
@@ -469,13 +466,13 @@ class Amity(object):
                 'magenta')
 
         if file_out is not None:
-            file_loc = '/data/{}.txt'.format(file_out)
+            file_loc = '/amity/data/{}.txt'.format(file_out)
             path = os.getcwd() + file_loc
             alloc_file = open(path, 'w+')
 
             for person_key_dict, person_value_dict in self._persons.iteritems():
                 if isinstance(person_value_dict, dict):
-                    for person_key, person_value in v.iteritems():
+                    for person_key, person_value in person_value_dict.iteritems():
                         if person_value.get_office_allocated() is None:
                             print >> alloc_file, '{} {}:'.format(
                                 person_value.get_first_name(),
@@ -555,7 +552,7 @@ class Amity(object):
                 'magenta')
 
         if file_out is not None:
-            file_loc = '/data/{}.txt'.format(file_out)
+            file_loc = '/amity/data/{}.txt'.format(file_out)
             path = os.getcwd() + file_loc
             alloc_file = open(path, 'w+')
 
@@ -569,11 +566,10 @@ class Amity(object):
                                 person_value.get_office_allocated().get_roomname())
                             if person_value.get_boarding():
                                 if person_value.get_accomodation_allocated():
-                                    print >> (alloc_file,
-                                              'ACCOMODATION: {}'.format(
-                                                  person_value.
-                                                  get_accomodation_allocated()
-                                                  .get_roomname()))
+                                    print >> alloc_file, 'ACCOMODATION: {}'.format(
+                                        person_value.
+                                        get_accomodation_allocated()
+                                        .get_roomname())
                         if (person_value.get_office_allocated() is
                                 None and
                                 person_value.get_boarding()):
@@ -601,6 +597,7 @@ class Amity(object):
         '''
         print room and all its occupants
         '''
+        print_response = None
         for person_key_dict, person_value_dict in self._persons.iteritems():
             if isinstance(person_value_dict, dict):
                 for person_key, person_value in person_value_dict.iteritems():
@@ -619,6 +616,7 @@ class Amity(object):
                             '-------------------------------' +
                             '---------------------------------------------',
                             'magenta')
+                        print_response = 'Done'
                     if (person_value.get_role() == 'FELLOW' and
                             person_value.get_accomodation_allocated() is not
                             None and
@@ -635,6 +633,8 @@ class Amity(object):
                             '-------------------------------' +
                             '---------------------------------------------',
                             'magenta')
+                        print_response = 'Done'
+        return print_response
 
     # ============================================================================
     # print room details
@@ -643,6 +643,7 @@ class Amity(object):
         '''
         prints all rooms and space available
         '''
+        print_response = None
         for room_key_dict, room_value_dict in self._rooms_object.iteritems():
             if isinstance(room_value_dict, dict):
                 for room_key, room_value in room_value_dict.iteritems():
@@ -658,6 +659,8 @@ class Amity(object):
                         '----------------------------------' +
                         '------------------------------------------',
                         'magenta')
+                    print_response = 'Done'
+        return print_response
 
     # ============================================================================
     # create unique room name constaraint
@@ -783,9 +786,7 @@ class Amity(object):
                     if x.get_role() == 'FELLOW':
                         accom_obj = x.get_accomodation_allocated()
                         # check that living space is assigned
-                        if accom_obj is None:
-                            accom_obj = None
-                        else:
+                        if accom_obj is not None:
                             accom_obj = accom_obj.get_room_id()
 
                         personDB.insert_person(

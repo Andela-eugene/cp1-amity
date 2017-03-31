@@ -11,10 +11,6 @@ Desc      : Amity test file
 # ============================================================================
 from unittest import TestCase
 
-from amity.person.fellow import Fellow
-from amity.person.staff import Staff
-from amity.rooms.room import Room
-from amity.rooms.livingroom import Livingroom
 from amity.amity import Amity
 
 
@@ -28,6 +24,12 @@ class AmityTest(TestCase):
         self.amity.add_person('Kim', 'Wang', staff='staff')
         self.amity.add_person(
             'Yung', 'Ping', fellow='fellow', accomodation=True)
+        self.amity.add_person('Mercy', 'Chang', staff='staff')
+        self.amity.add_person('Mei', 'Win', staff='staff')
+        self.amity.add_person('Sandy', 'Alice', staff='fellow')
+        self.amity.add_person('Terry', 'Mathews',
+                              staff='fellow', accomodation=True)
+        self.amity.add_person('Un', 'allocated', staff='staff')
 
     def test_create_room_function(self):
         self.assertTrue(self.amity.create_room('reception', 'OFFICE'))
@@ -47,14 +49,28 @@ class AmityTest(TestCase):
         self.assertGreater(self.amity.get_persons(), 0)
 
     def test_print_unallocated_persons(self):
-        self.assertFalse(self.amity.print_unallocated())
+        self.assertTrue(self.amity.print_unallocated(
+            file_out='test_unallocated'))
 
-    def test_print_unallocated_persons(self):
-        self.assertTrue(self.amity.print_allocated())
+    def test_print_allocated_persons(self):
+        self.assertTrue(self.amity.print_allocated(file_out='test_allocated'))
+
+    def test_get_room_details_by_id(self):
+        rooms = self.amity.get_rooms_dict()
+        for room_key, room_value in rooms['offices'].iteritems():
+            self.assertEqual(self.amity.get_room_details_by_id(
+                room_value.get_room_id()).get_roomname(), 'occulus')
+            break
 
     def test_add_unique_room_name_constraint(self):
         self.amity.create_room('occulus')
         self.assertFalse(self.amity.create_room('occulus'))
+
+    def test_print_room(self):
+        self.assertEqual(self.amity.print_room('occulus'), 'Done')
+
+    def test_print_rooms(self):
+        self.assertEqual(self.amity.print_rooms(), 'Done')
 
     def test_reallocate_staff_to_living_spcae(self):
         persons = self.amity.get_persons_dict()
@@ -74,7 +90,9 @@ class AmityTest(TestCase):
         self.assertEqual(len(self.amity.load_people('persons')), 10)
 
     def test_save_state_into_database(self):
-        self.assertEqual(self.amity.save_state('testAmity.db'), 'Done')
+        self.assertEqual(self.amity.save_state(
+            save_data='testAmity.db'), 'Done')
 
     def test_load_state_from_database(self):
-        self.assertEqual(self.amity.load_state('testAmity.db'), 'done')
+        self.assertEqual(self.amity.load_state(
+            load_data='testAmity.db'), 'done')

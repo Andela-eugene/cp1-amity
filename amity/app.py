@@ -30,7 +30,6 @@ Note:
 import sys
 import cmd
 
-from termcolor import cprint, colored
 from termcolor import cprint
 from pyfiglet import figlet_format
 from docopt import docopt, DocoptExit

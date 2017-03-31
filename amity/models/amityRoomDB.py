@@ -10,9 +10,6 @@ Desc      : Deconstracts database model and issues sql syntax
 # necessary imports
 # ============================================================================
 
-import sys
-import os
-import sqlite3
 from dbConfig import AmityDatabase
 
 
@@ -33,12 +30,6 @@ class AmityRoomsDB:
             '''.format(
                 self.table))
 
-    def plain_sql_statement(self, sql, *params):
-        '''
-                execute plain sql statement
-        '''
-        self._db.sql_do(sql, params)
-
     def insert_room(self, row):
         '''
                 inserts new room to database
@@ -56,12 +47,6 @@ class AmityRoomsDB:
                 retrive all rooms in the database
         '''
         return self._db.get_records()
-
-    def update_room(self, key, rec):
-        '''
-                update a single room in the database using room_id as key
-        '''
-        self._db.update(key, rec)
 
     def delete_room(self, key):
         '''

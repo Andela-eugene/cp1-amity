@@ -35,14 +35,16 @@ class Office(Room):
 
                 updates the space available in the office instance.
         '''
-
+        update_space = None
         roomspace = self.get_room_space()
 
         if roomspace:
             self.set_room_space(roomspace - 1)
-            return True
+            update_space = True
         else:
-            return False
+            update_space = False
+
+        return update_space
 
     # ============================================================================
     # remove from room
@@ -53,10 +55,11 @@ class Office(Room):
 
                 frees up space in the office instance.
         '''
+        free_space = False
         roomspace = self.get_room_space()
 
         if 0 <= roomspace < 6:
             self.set_room_space(roomspace + 1)
-            return True
-        else:
-            return False
+            free_space = True
+
+        return free_space
