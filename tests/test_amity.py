@@ -92,7 +92,5 @@ class AmityTest(TestCase):
     def test_save_state_into_database(self):
         self.assertEqual(self.amity.save_state(
             save_data='testAmity.db'), 'Done')
-
-    def test_load_state_from_database(self):
         self.assertEqual(self.amity.load_state(
             load_data='testAmity.db'), 'done')
